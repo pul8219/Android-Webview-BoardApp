@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
+    <title>게시글 작성하기(WRITE)</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- css 가져오기 -->
+    <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css">
+    <!-- 추가 css -->
+    <style type="text/css">
+        body {
+            background-color: #EEEDEE;
+        }
+
+        body>.grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
+        }
+
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+
+            setWriter(); // 세션 정보 이용, 작성자를 자동으로 지정
+
+            $("#write_bbs").click(function(){
+                /* 테스트 출력
+                var test_content = $("input[name='content']").val();
+                alert(test_content);
+                */
+                /* 테스트 출력
+                var test_writer = $("input[name='writer']").val();
+                alert(test_writer);
+                */
+
+
+                //trim은 공백을 제거해준다. 아래 조건문에 trim이 들어간 코드는 공백을 제거해도 null이면 경고창을 띄우라는 말
+
+            	// 입력하지 않은 항목이 있을 경우
+            	if($("input[name='writer']").val() == null ||
+            	        $("input[name='writer_name']").val() == null ||
+            	        !$.trim($("input[name='title']").val())){
+
+            		if(!$.trim($("input[name='title']").val())){
+            			alert('제목을 입력해주세요');
+            		}
+            		else{
+            		    alert('유효하지 않은 사용자입니다.');
+            		}
+            		return false;
+            	}
+
+                // 입력하지 않은 항목 없이 모두 입력했을 경우(내용은 비었을 수도 있음)
+                else{
+				var params = {}; // object 만들기
+
+            	var writer = $("#writer").val();
+            	var writer_name = $("#writer_name").val();
+            	var title = $("#b_title").val();
+            	var content = $("#b_content").val();
+            	content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>'); // 엔터(개행문자) <br/> 로 치환(하여 DB에 저장)
+
+            	/* 테스트 출력 */
+            	/* alert(title); */
+
+            	params['writer'] = writer;
+            	params['writer_name'] = writer_name;
+            	params['title'] = title;
+            	params['content'] = content;
+
+            	window.board.insertBoard(JSON.stringify(params));
+
+                }
+
+            });
+
+        });
+
+
+        /* 로그인된 세션 정보(아이디, 이름) 받아와 작성자로 지정 */
+        function setWriter(){
+            var id = window.board.getSessionData('id');
+            var name = window.board.getSessionData('name');
+
+            // 테스트 출력
+            console.log(id);
+            console.log(name);
+
+            $("#writer").val(id);
+            $("#writer_name").val(name);
+        }
+
+
+        function insertBoard_callback(){
+            alert('작성이 완료되었습니다.');
+            location.replace('boardMain.html');
+        }
+
+
+        function cancelCheck(){
+            location.replace('boardMain.html');
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            게시글 작성
+        </h2>
+        <div class="ui large form">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <input type="text" id="b_title" name="title" placeholder="게시글 제목" autocomplete="off" autofocus="autofocus">
+                </div>
+                <div>
+                    <!-- 작성자 표시(수정 불가) -->
+                    <input type="hidden" id="writer" name="writer">
+                    <input type="text" id="writer_name" name="writer_name" readonly="readonly">
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <textarea style="resize: vertical;" id="b_content" name="content" placeholder="게시글 내용" rows="8"></textarea>
+
+                    </div>
+                </div>
+                <input type="file" id="img">
+                <br>
+                <button class="ui fluid large teal submit button" id="write_bbs">작성 완료</button>
+            </div>
+
+            <div class="ui error message"></div>
+
+        </div>
+
+        <button class="ui fluid large teal submit button" onclick="cancelCheck()">작성 취소하고 뒤로가기</button>
+    </div>
+</div>
+
+</body>
+
+</html>

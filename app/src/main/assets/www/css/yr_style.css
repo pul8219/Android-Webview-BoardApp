@@ -1,0 +1,109 @@
+@CHARSET "UTF-8";
+table.table td{
+            width:100%;
+            <!--            line-height: 2.5em;-->
+            text-align: center;
+            vertical-align:middle;
+            border: 1px solid #c7c7bc;
+　       }
+
+        table.table th{
+            text-align: center;
+            vertical-align:middle;
+            border: 1px solid #c7c7bc;
+        }
+
+        #align_content {
+            text-align: left;
+        }
+
+        .segment {
+            width: 98%;
+        }
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+        td {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        }
+
+/**/
+        #rep_footer{
+            background-color: white;
+            border: 1px solid lightgray;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        #rep_title{
+            margin-left: 15px;
+            margin-top: 15px;
+        }
+        #reply_board{
+
+		}
+
+		.replyNum{
+			margin: 10px 10px 10px 10px;
+			padding: 5px 5px 10px 5px;
+			border-bottom: 2px solid lightgray;
+			line-height: 150%
+		}
+
+        .violet_color{
+            color: #8B5F92;
+        }
+		.rep_regdate{
+			font-size: 80%;
+		}
+
+		#reply_form{
+		    margin-top:15px;
+		    margin-left: 15px;
+		    margin-right: 15px;
+		    margin-bottom: 15px;
+		}
+
+
+
+        		@font-face {
+        			font-family: 'NanumGothic';
+        			src: url(NanumFont_TTF_ALL/NanumGothic.ttf)
+        			format('truetype');
+        		}
+        		* {
+        			font-family: NanumGothic;
+        		}
+
+        		#SharePopup{
+        			background-color: white ;
+        			padding:20px;
+        			border:2px solid #ddd;
+        			position:absolute;
+        			left:20px;
+        			top:20px;
+        		}
+        		.header{
+
+        		}
+        		.content{
+        			padding: 15px 15px 15px 15px;
+        		}
+        		.title{
+        			font-size: 130%;
+        			font-weight: bold;
+        			/*width: 85%;
+        			float: left;*/
+        		}
+        		#closePopup{
+        		    /*width: 15%;
+                    float: right;*/
+        		}
+        		#currentUrl{
+        			width: 180px;
+        		}
+

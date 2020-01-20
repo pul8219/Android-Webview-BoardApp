@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
+    <title>게시글 수정하기(UPDATE)</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- css 가져오기 -->
+    <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css">
+    <!-- 추가 css -->
+    <style type="text/css">
+        body {
+            background-color: #EEEDEE;
+        }
+
+        body>.grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
+        }
+
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+
+    var postno = getParameter('post_no'); // getParameter 함수 이용, URL에서 글번호 가져오기
+
+
+    $(function(){
+
+    	setWriter(); //세션 정보 이용, 작성자를 자동으로 지정
+
+        window.board.updateBoardInfo(postno);
+
+        /* postno은 String 형태일테니 그냥 updateBoardInfo()에 postno 그대로 넘겨주고 JSInterface에서 바로 써도 될텐데 이렇게 쓰는 이유는? 물론 이것도 되지만*/
+        /* -> 그래서 위에 한 줄이랑 JSInterface 수정해서 간단하게 고쳤음! */
+    	/*
+    	var obj = {} //object 생성
+    	obj['postno'] = postno;
+    	window.board.updateBoardInfo(JSON.stringify(obj)); // 글번호로 게시글 정보 받아옴
+        */
+
+    	// 수정 완료 버튼 클릭시 일어나는 동작
+    	$("#update_bbs").click(function(){
+    		// 입력하지 않은 항목이 있을 경우
+    		if($("input[name='writer']").val() == null ||
+        	        $("input[name='writer_name']").val() == null ||
+        	        !$.trim($("input[name='title']").val())){
+
+    			if(!$.trim($("input[name='title']").val())){
+        			alert('제목을 입력해주세요');
+        		}
+        		else{
+        		    alert('유효하지 않은 사용자입니다.');
+        		}
+        		return false;
+    		}
+
+    		// 입력하지 않은 항목 없이 모두 입력했을 경우(내용은 비었을 수도 있음)
+    		else{
+    			var params = {}; //object 만들기
+
+    			var writer = $("#writer").val();
+    			var writer_name = $("#writer_name").val();
+    			var title = $("#b_title").val();
+    			var content = $("#b_content").val();
+    			content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>'); // 엔터(개행문자) <br/> 로 치환(하여 DB에 저장)
+
+    			params['post_no'] = postno;
+    			params['title'] = title;
+    			params['content'] = content;
+    			params['writer'] = writer;
+    			params['writer_name'] = writer_name;
+
+    			window.board.updateBoard(JSON.stringify(params));
+    		}
+
+
+    	});
+
+
+    });
+
+
+    /* 로그인된 세션 정보(아이디, 이름) 받아와 작성자로 지정 */
+    function setWriter(){
+    	var id = window.board.getSessionData('id');
+        var name = window.board.getSessionData('name');
+
+        // 테스트 출력
+        console.log(id);
+        console.log(name);
+
+        $("#writer").val(id);
+        $("#writer_name").val(name);
+    }
+
+
+    /* 수정 페이지를 불러올 때 쓰이는 콜백함수 */
+    function updateBoardInfo_callback(board){
+    	var item = board;
+
+    	var title = item.TITLE;
+    	var content = item.CONTENT;
+    	content = content.split('<br/>').join("\r\n"); // <br/>이 text로 그대로 출력되지 않도록 엔터 개행문자로 바꿔줌
+
+    	$("#b_title").val(title);
+    	$("#b_content").val(content);
+
+    }
+
+
+    /* 수정한 내용을 DB에 UPDATE하고 호출되는 콜백함수 */
+    function updateBoard_callback(){
+    	alert('수정이 완료되었습니다.');
+    	location.replace('boardInfo.html?post_no=' + postno);
+    }
+
+
+    function cancelCheck(){
+        location.replace('boardInfo.html?post_no=' + postno);
+    }
+
+
+    /* URL로 전달된 파라미터 값을 가져오는 function */
+    function getParameter(param) {
+    // 리턴값을 위한 변수 선언
+    var returnValue;
+
+    // 현재 URL 가져오기
+    var url = location.href;
+
+    // get 파라미터 값을 가져올 수 있는 ? 를 기점으로 slice 한 후 split 으로 나눔
+    var parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&');
+
+    // 나누어진 값의 비교를 통해 param 으로 요청된 데이터의 값만 return
+    for (var i = 0; i < parameters.length; i++) {
+        var varName = parameters[i].split('=')[0];
+        if (varName.toUpperCase() == param.toUpperCase()) { //파라미터로 넘어온 key값과 url의 key값이 일치하면
+            returnValue = parameters[i].split('=')[1]; //returnValue 변수에 value 값을 담음
+            return decodeURIComponent(returnValue);
+        }
+    }
+}
+
+
+    </script>
+
+</head>
+
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            게시글 수정
+        </h2>
+        <form class="ui large form">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <input type="text" id="b_title" name="title" placeholder="게시글 제목" autocomplete="off" autofocus="autofocus">
+                </div>
+                <div>
+                    <!-- 작성자 표시(수정 불가) -->
+                    <input type="hidden" id="writer" name="writer">
+                    <input type="text" id="writer_name" name="writer_name" readonly="readonly">
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <textarea style="resize: vertical;" id="b_content" name="content" placeholder="게시글 내용" rows="8"></textarea>
+                    </div>
+                </div>
+                <div class="ui fluid large teal submit button" id="update_bbs">수정 완료</div>
+            </div>
+
+            <div class="ui error message"></div>
+
+        </form>
+
+        <button class="ui fluid large teal submit button" onclick="cancelCheck()">수정 취소하고 뒤로가기</button>
+    </div>
+</div>
+</body>
+</html>

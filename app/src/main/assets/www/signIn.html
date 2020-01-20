@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
+    <title>로그인(SIGN IN)</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- css 가져오기 -->
+    <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css">
+    <!-- 추가 css -->
+    <style type="text/css">
+        body {
+            background-color: #EEEDEE;
+        }
+        body>.grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            window.board.insertDefaultUserJS();
+
+            $("a#signIn").click(function() {
+
+                var id = $("input[name='id']");
+                var pw = $("input[name='pw']");
+
+                /* 아이디 혹은 패스워드를 입력하지 않았을 경우 */
+                if(id.val().length == 0 || pw.val().length == 0){
+                    alert('아이디 혹은 비밀번호를 입력해주세요.');
+
+                    /* 아이디, 패스워드 초기화 */
+                    /* id.val(''); */
+                    pw.val('');
+                    id.focus();
+
+                    return false;
+                }
+
+                /* 아이디, 패스워드 모두 입력한 경우, 입력값이 DB와 일치하는지 확인 필요 */
+                else{
+                    /* Object 생성 */
+                    var obj = {};
+
+                    obj['id'] = id.val();
+                    obj['pw'] = pw.val();
+
+                    /*자바스크립트 Object를 문자열로 변환하여 웹서버에 전달 */
+                    /* 아이디와 패스워드 파라미터로 전달 */
+                    /* JSInterface.java 참고 */
+                    window.board.login(JSON.stringify(obj));
+                    /* console.log(JSON.stringify(obj)); */
+
+                }
+            });
+        });
+
+
+        function login_callback(isPass){
+            /* 아이디와 패스워드가 DB 정보와 일치할 경우 boardMain.html로 이동 */
+            if(isPass){
+                location.href = 'boardMain.html';
+            }
+            /* 일치하지 않을 경우 */
+            else{
+                alert('가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.');
+                /* 비밀번호란 초기화 */
+                var pw = $("input[name='pw']");
+                pw.val('');
+
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            SIGN IN
+        </h2>
+        <form class="ui large form" method="post">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <input type="text" id="id" name="id" placeholder="ID">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <input type="password" id="pw" name="pw" placeholder="PASSWORD">
+                    </div>
+                </div>
+                <div>
+                    <a href="#" class="ui fluid large teal submit button" id="signIn">LOGIN</a>
+                </div>
+            </div>
+
+            <div class="ui error message"></div>
+
+        </form>
+
+        <div class="ui message">
+            비밀번호가 기억나지 않으세요? <u><a href="#">비밀번호재설정</a></u>
+            <!-- 위 코드 수정 필요-->
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

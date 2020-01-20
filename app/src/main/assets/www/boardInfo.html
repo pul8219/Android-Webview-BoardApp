@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>게시글 상세(POST INFO)</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- css 가져오기 -->
+    <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css">
+    <!-- 추가 css -->
+    <link rel="stylesheet" type="text/css" href="css/yr_style.css">
+    <style type="text/css">
+        body {
+            background-color: #EEEDEE;
+            font-family: sans-serif;
+        }
+
+        body>.grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 1000px;
+        }
+
+        .view_btn {
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+    var postno = getParameter('post_no'); // getParameter 함수 이용, URL에서 글번호 가져오기
+
+    // 세션 처리에 필요
+    var myid = window.board.getSessionData('id');
+    var myname = window.board.getSessionData('name'); // 댓글 작성자 표시할 때 필요
+
+
+    $(function(){
+
+        // 댓글 부분에 default로 뿌려줄 세션 정보
+        $("#reply_id").val(myid);
+        $("#reply_name").val(myname);
+
+        //어차피 postno만 JSInterface에 넘겨주는거라 아래 세줄까지 안쓰고 바로 postno 넘겨줘도 되는데 그냥 이렇게 해도 되니까 했음
+        var obj = {}; // object 생성
+        obj['postno'] = postno; // key-value 형식
+
+        window.board.getBoardByNo(JSON.stringify(obj)); // json 형태 문자열로 파라미터 전달
+		window.board.getReplys(JSON.stringify(obj)); // 글번호를 넘겨주고 댓글 목록을 불러오는 메서드
+
+
+        $(document).on("click", "#openPopup", function(){
+			document.getElementById('SharePopup').style.display = "block";
+			$('#currentUrl').val(window.location.href);
+        });
+
+		$(document).on("click", "#closePopup", function(){
+			document.getElementById('SharePopup').style.display = "none";
+		});
+
+		$(document).on("click", "#copyUrlToClipboard", function(){
+			var copyUrl = $('#currentUrl');
+			copyUrl.select();
+			document.execCommand("copy");
+
+			copyUrl.blur();
+			alert('URL 주소가 클립보드에 복사되었습니다.');
+		});
+
+        // 삭제 버튼을 누르면 실행되는 작업
+        // 삭제버튼은 세션에 따라 동적으로 생성되기 때문에 $("#delete_bbs").click(function(){}) 이렇게 말고 아래와 같이 작성해줘야 함
+        $(document).on("click", "#delete_bbs", function(){
+            // confirm 메서드(확인을 누르면 true, 취소를 누르면 false가 반환됨)
+        	var con_del = confirm("정말로 글을 삭제하시겠습니까?");
+
+            // 삭제
+            if(con_del == true){
+            	window.board.deleteBoard(postno);
+            	alert('삭제가 완료되었습니다.');
+            	location.replace('boardMain.html');
+            }
+            // 삭제 취소
+            else{
+            	return false;
+            }
+        });
+
+
+
+        /* 이렇게 하면 삭제 작동 안함 (안쓰는 코드!) */
+        /* 삭제 버튼에 id 지정해도 버튼이 innerHTML로 동적으로 생성되기 때문에 id를 못찾음. 그래서 이렇게 쓰면 안됨*/
+        /*
+        $("#delete_bbs").click(function(){
+            // confirm 메서드(확인을 누르면 true, 취소를 누르면 false가 반환됨)
+        	var con_del = confirm("정말로 글을 삭제하시겠습니까?");
+
+            // 삭제
+            if(con_del == true){
+            	window.board.deleteBoard(postno);
+            	alert('삭제가 완료되었습니다.');
+            	location.replace('boardMain.html');
+            }
+            // 삭제 취소
+            else{
+            	return false;
+            }
+
+        });
+        */
+
+
+        /* 댓글 입력 부분의 '등록' 버튼 눌렀을 경우 동작 */
+        $(document).on("click", "#reply_submit", function(){
+            var reply_content = $("#reply_content");
+
+            // 아예 입력하지 않은 것만 걸러주는 if문
+            /* 안쓰는 코드
+            if(!reply_content.val()){
+                alert('댓글 내용을 입력하세요.');
+                reply_content.focus(); //댓글 입력창에 focus
+
+    		    return false;
+            }
+            */
+
+            // 댓글 내용을 입력하지 않은 경우(내용 아예 입력하지 않은 것과 공백만 입력한 것 걸러줌)
+            if(!$.trim(reply_content.val())){
+    		    alert('댓글 내용을 입력하세요.');
+                reply_content.focus(); //댓글 입력창에 focus
+
+    		    return false;
+    	    }
+
+            // 댓글 내용을 입력한 경우
+            else{
+
+    		var params = {};
+
+    		var rep_con = reply_content.val();
+    		rep_con = rep_con.replace(/(?:\r\n|\r|\n)/g, '<br/>'); // 엔터(개행문자) <br/> 로 치환(하여 DB에 저장)
+
+    		params['reply_id'] = myid;
+    		params['post_no'] = postno;
+    		params['reply_content'] = rep_con;
+
+    		window.board.insertReply(JSON.stringify(params));
+            }
+
+    	});
+
+
+        /* 댓글 '수정' 버튼을 클릭한 경우 */
+        $(document).on("click", "button[name='replyUpdate']", function(){
+			var replyNo = $("input#" + this.id).val(); // 여기서 this.id는 on 명령에서 선택된 name이 replyUpdate인 버튼의 id를 가리킴
+			var contentBox = document.getElementById("updateContent" + replyNo); // 태그 요소 선택
+            var ori_con = document.getElementById(replyNo);
+            var upBox = document.getElementById("replyUpdate" + replyNo);
+            var deBox = document.getElementById("replyDelete" + replyNo);
+            var postNo = $("#rep_postno").val();
+
+			contentBox.style.display = "block"; // display 속성이 none 이었던 댓글 내용박스를 보이게 바꿈
+			ori_con.style.display = "none"; // 글 원래 내용 숨김
+			upBox.style.display = "none"; // 수정 버튼 숨김
+			deBox.style.display = "none"; // 삭제 버튼 숨김
+
+            //var empty = "";
+			//$("div#" + replyNo).replaceWith(empty); // 본래 댓글 내용 표시창은 비워버림(태그까지)
+			//$("button#replyUpdate" + replyNo).replaceWith(empty); // 수정 버튼 숨김
+			//$("button#replyDelete" + replyNo).replaceWith(empty); // 삭제 버튼 숨김
+
+			// 댓글 수정하고 수정 완료를 누르면
+			$("button#replyUpdateSubmit" + replyNo).click(function(){
+				var rep_con = $("textarea#innerText" + replyNo);
+				var rep_content = rep_con.val();
+
+				// 공백이거나 null일 경우
+				if(!$.trim(rep_content)){
+					alert('댓글을 입력해주세요.');
+					rep_con.focus(); // 댓글 수정 textarea에 focus
+					return false;
+				}
+				// 댓글 내용이 제대로 입력됐을 경우
+				else{
+					rep_content = rep_content.replace(/(?:\r\n|\r|\n)/g, '<br/>'); // 엔터(개행문자) <br/>로 치환(하여 DB에 저장)
+
+					window.board.updateReply(replyNo, rep_content, postNo);
+					//$("#replyNum"+replyNo).load(window.location.href + '#replyNum' + replyNo);
+					//location.reload();
+				}
+			});
+        });
+
+
+        /* 댓글 '삭제' 버튼 클릭한 경우 */
+        $(document).on("click", "button[name='replyDelete']", function(){
+        	// confirm 메서드(확인을 누르면 true, 취소를 누르면 false가 반환됨)
+        	var rep_con_del = confirm("정말로 댓글을 삭제하시겠습니까?");
+
+        	// 삭제할 댓글의 댓글 번호(reply_no) 구하기
+        	var replyNo = $("input#" + this.id).val();
+        	// 삭제할 댓글이 있는 글의 글번호(post_no) 구하기
+        	var postNo = $("#rep_postno").val();
+
+        	// 삭제
+        	if(rep_con_del == true){
+        		window.board.deleteReply(replyNo, postNo);
+        	}
+        	// 삭제 취소
+        	else{
+        		return false;
+        	}
+        });
+
+    });
+
+
+
+    function getBoardByNo_callback(board){
+        var item = board;
+
+        var html = '';
+        var UpdateDelete_html = '';
+
+        html += '<tr>';
+        html += '<th class="table-active" style="width:15%;">글 번호</th>';
+        html += '<td style="width:10%;">' + board.POST_NO + '</td>';
+        html += '<th class="table-active" style="width:15%;">작성자</th>';
+        html += '<td style="width:35%;">' + board.NAME + '</td>';
+        html += '<th class="table-active" style="width:15%;">조회수</th>';
+        html += '<td style="width:10%;">' + board.HIT + '</td>';
+        html += '</tr>';
+
+
+        html += '<tr>';
+        html += '<th class="table-active" colspan="2">등록일자</th>';
+        html += '<td colspan="4">' + board.REGDATE + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<th colspan="2">제목</th>';
+        html += '<td colspan="4">' + board.TITLE + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<th colspan="2">내용</th>';
+        html += '<td colspan="4" id="align_content">' + board.CONTENT + '</td>';
+        html += '</tr>';
+
+        $("#boardinfo").html(html);
+
+
+        // 본인이 작성한 글일 경우 수정, 삭제 버튼을 표시
+        if(myid == board.USER_ID){ // 세션에서 받은 아이디와 DB에서 가져온 글의 정보 중 아이디를 비교
+            UpdateDelete_html += '<a href="boardUpdate.html?post_no=' + board.POST_NO + '" class="btn btn-secondary btn-sm active pull-right">수정</a>';
+            UpdateDelete_html += '<div class="btn btn-secondary btn-sm active pull-right" id="delete_bbs">삭제</div>';
+            //위 줄에서 onclick="deleteCheck()" 속성 지웠음
+            $("#UpdateAndDelete").html(UpdateDelete_html);
+        }
+
+    }
+
+
+
+    // 콜백함수: 해당 게시글의 댓글을 전부 보여줌
+    function getReplys_callback(replys){
+
+    	var items = replys;
+
+    	var html = '';
+    	for(var i = 0; i < items.length; i++){
+    		var item = items[i];
+    		// 아래 두 줄 -> 수정할 내용 textarea에 뿌려줄 때 필요
+    		var reply_content = item.REPLYCONTENT;
+    		reply_content = reply_content.split('<br/>').join("\r\n"); // <br/>이 text로 그대로 출력되지 않도록 엔터 개행문자로 바꿔줌
+
+            html += '<div class="replyNum" id="replyNum' + item.REPLY_NO + '">';
+    		html += '<div class="violet_color"><b>' + item.NAME + '</b></div>';
+    		html += '<div id="' + item.REPLY_NO + '">' + item.REPLYCONTENT + '</div>';
+    		html += '<input type="hidden" id="rep_postno" value="' + item.POST_NO + '">'
+
+    		// 댓글 수정시 보이는 요소
+    		html += '<div style="display:none;" id="updateContent' + item.REPLY_NO + '">';
+    		html += '<textarea id="innerText' + item.REPLY_NO + '" name="innerText" style="height:30px; width:200px;">' + reply_content + '</textarea><br>';
+    		html += '<button id="replyUpdateSubmit' + item.REPLY_NO + '" name="replyUpdateSubmit">수정완료</button>';
+    		html += '</div>';
+
+    		html += '<div class="rep_regdate">' + item.REGDATE + '</div>';
+    		html += '<div id="updatedelete">';
+
+    		if(myid == item.REPLY_ID){
+    			html += '<button class="btn btn-secondary btn-sm active pull-left" name="replyUpdate" id="replyUpdate' + item.REPLY_NO + '">수정</button>';
+    			html += '<button class="btn btn-secondary btn-sm active pull-left" name="replyDelete" id="replyDelete' + item.REPLY_NO + '">삭제</button>';
+    			html += '<input type="hidden" value="' + item.REPLY_NO + '" id="replyUpdate' + item.REPLY_NO + '">';
+    			html += '<input type="hidden" value="' + item.REPLY_NO + '" id="replyDelete' + item.REPLY_NO + '">';
+    			html += '</div>';
+    			html += '</div>';
+    		}
+    		else{
+    			html += '</div>';
+    			html += '</div>';
+    		}
+
+    	}
+
+    	$("#reply_board").html(html);
+
+    }
+
+
+    function insertReply_callback(data){
+        $("#reply_content").val(''); // 댓글 입력창 내용 초기화
+
+        var obj = {};
+        obj['postno'] = data.POST_NO;
+
+        window.board.getReplys(JSON.stringify(obj));
+    }
+
+
+    function updateReply_callback(data){
+        var obj = {};
+        obj['postno'] = data.POST_NO;
+
+        window.board.getReplys(JSON.stringify(obj));
+
+    }
+
+
+    function deleteReply_callback(data){
+        var obj = {};
+        obj['postno'] = data.POST_NO;
+
+        window.board.getReplys(JSON.stringify(obj));
+
+    }
+
+
+
+
+    /* URL로 전달된 파라미터 값을 가져오는 function */
+    function getParameter(param) {
+    // 리턴값을 위한 변수 선언
+    var returnValue;
+
+    // 현재 URL 가져오기
+    var url = location.href;
+
+    // get 파라미터 값을 가져올 수 있는 ? 를 기점으로 slice 한 후 split 으로 나눔
+    var parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&');
+
+    // 나누어진 값의 비교를 통해 param 으로 요청된 데이터의 값만 return
+    for (var i = 0; i < parameters.length; i++) {
+        var varName = parameters[i].split('=')[0];
+        if (varName.toUpperCase() == param.toUpperCase()) { //파라미터로 넘어온 key값과 url의 key값이 일치하면
+            returnValue = parameters[i].split('=')[1]; //returnValue 변수에 value 값을 담음
+            return decodeURIComponent(returnValue);
+        }
+    }
+}
+
+
+
+    </script>
+
+
+
+
+
+</head>
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            <br>
+            게시글 상세 페이지
+            <br>
+        </h2>
+
+        <div class="ui large form">
+            <div class="ui stacked segment">
+                <table class="table">
+                    <thead></thead>
+                    <tbody id="boardinfo">
+                    <!-- getBoardByNo_callback() function 참고 -->
+                    </tbody>
+                </table>
+
+                <div class="bottom" style="text-align: right">
+                    <div>
+                        <a href="boardMain.html" id="backBoard" class="btn btn-primary btn-sm active float-left">목록으로</a>
+                    </div>
+
+                    <div id="UpdateAndDelete">
+                        <!-- 수정, 삭제 버튼 영역 -->
+                        <!-- 사용자가 쓴 글이냐에 따라 선택적으로 보여짐 -->
+                        <!-- getBoardByNo_callback() function 참고 -->
+                    </div>
+
+                    <br>
+                    <br>
+                    <button id="openPopup">공유하기</button>
+                    <div id="SharePopup" class="popup-layer" style="display:none; margin-top:20%;">
+                        <div id="SharePopupContents">
+                            <div class="header">
+                                <div class="title float-left">공유하기</div>
+                                <div class="btn-close-layer float-right"><button id="closePopup">X</button></div>
+                                <br><hr>
+                            </div>
+                            <div class="content input-group mb-3">
+                                <input type="text" class="form-control" id="currentUrl">
+                                <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" id="copyUrlToClipboard">URL 복사</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="rep_footer">
+                <h3 id="rep_title">댓글</h3>
+                <!-- 해당 게시글에 작성된 댓글 모두 보여주는 부분 -->
+                <div id="reply_board">
+                    <!--                    <div><b></b></div> &lt;!&ndash; 댓글 작성자 이름 &ndash;&gt;-->
+                    <!--                    <div></div> &lt;!&ndash; 댓글 내용 &ndash;&gt;-->
+                    <!--                    <div></div> &lt;!&ndash; 댓글 작성 일자 &ndash;&gt;-->
+                    <!--                    <div class="updatedelete">-->
+                    <!--                        <a href="#" class="dat_edit_bt"></a>-->
+                    <!--                        <a href="#" class="dat_delete_bt"></a>-->
+                    <!--                    </div> &lt;!&ndash; 수정, 삭제 버튼(본인이 작성한 댓글일 때만 활성화) &ndash;&gt;-->
+                </div>
+                <!-- 댓글 부분 -->
+                <div id="reply_form">
+                    <div>
+                        <input type="hidden" readonly="readonly" id="reply_id" name="reply_id">
+                        <input type="text" readonly="readonly" id="reply_name" name="reply_name">
+                        <textarea rows="3" cols="24" id="reply_content" name="reply_content" placeholder="댓글을 입력하세요."></textarea>
+                    </div>
+                    <div>
+                        <div><button id="reply_submit" name="reply_submit">등록</button></div>
+                        <!-- <input type="button" id="reply_submit" name="reply_submit" value="등록"> -->
+                        <!--                        <div class="btn btn-default btn-secondary btn-sm active float-right"><button id="reply_submit">등록</button></div>-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

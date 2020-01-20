@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
+    <title>게시글 목록(BOARD LIST)</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- css 가져오기 -->
+    <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css">
+    <!-- 추가 css -->
+    <style type="text/css">
+        body {
+            background-color: #EEEDEE;
+        }
+
+        body>.grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 1000px;
+        }
+
+        .view_btn {
+            cursor: pointer;
+        }
+
+        table.table td {
+            width:100%;
+<!--            line-height: 2.5em;-->
+            text-align: center;
+            vertical-align:middle;
+            color: #404040;
+            border: 1px solid #c7c7bc;
+　       }
+
+        table.table th{
+            text-align: center;
+            vertical-align:middle;
+            border: 1px solid #c7c7bc;
+        }
+
+        table.table td a{
+            display:block;
+            width:100%;
+            height:100%;
+
+        }
+        table.table td a:hover{
+        background-color: #f2e6ff;
+        }
+
+        .segment {
+            width: 98%;
+        }
+		table {
+            width: 100%;
+            table-layout: fixed;
+		}
+		td {
+		max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        }
+
+
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            window.board.getBoards();
+        });
+
+
+        function getBoards_callback(boards){
+        	var items = boards;
+        	/*console.log(items);*/
+
+        	var html = '';
+
+        	for(var i = 0; i < items.length; i++){
+        		var item = items[i];
+
+        		html += '<tr>';
+        		html += '<td>'+ item.POST_NO +'</td>';
+        		html += '<td>'+ '<a href="boardInfo.html?post_no=' + item.POST_NO + '">' + item.TITLE + '</a>' + '</td>';
+        		html += '<td>'+ item.NAME +'</td>';
+        		html += '<td>'+ item.REGDATE +'</td>';
+        		html += '<td>'+ item.HIT +'</td>';
+        		html += '</tr>';
+
+        	}
+
+        	$("#list").html(html);
+
+        }
+
+    </script>
+</head>
+
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            BOARD LIST
+        </h2>
+        <div class="ui large form">
+            <div class="ui stacked segment">
+                <div id="board_list">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width:10%;">No</th>
+                            <th style="width:40%;">글제목</th>
+                            <th style="width:20%;">작성자</th>
+                            <th style="width:20%;">등록일자</th>
+                            <th style="width:10%;">조회수</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list">
+                        <!-- getBoards_callback() function 참고 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <a href="boardWrite.html" class="btn btn-primary btn-sm active float-right" role="button" aria-pressed="true">게시글 작성</a>
+                </div>
+                <!--원래 버튼 코드-->
+                <!-- <a href="boardWrite.html"><button class="ui fluid large teal submit button">게시글 작성하기</button></a> -->
+                <br>
+                <br>
+                <!--Pagination - 작동 안함-->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+
+            <div class="ui error message"></div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
