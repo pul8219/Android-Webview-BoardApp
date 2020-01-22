@@ -68,17 +68,6 @@ table.table td{
 		    margin-bottom: 15px;
 		}
 
-
-
-        		@font-face {
-        			font-family: 'NanumGothic';
-        			src: url(NanumFont_TTF_ALL/NanumGothic.ttf)
-        			format('truetype');
-        		}
-        		* {
-        			font-family: NanumGothic;
-        		}
-
         		#SharePopup{
         			background-color: white ;
         			padding:20px;

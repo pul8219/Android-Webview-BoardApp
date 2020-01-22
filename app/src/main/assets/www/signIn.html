@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width", intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
+    <meta name="viewport" content="width=device-width, intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
     <title>로그인(SIGN IN)</title>
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -11,6 +11,14 @@
     <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css">
     <!-- 추가 css -->
     <style type="text/css">
+        @font-face {
+                    font-family: 'NanumGothic';
+                    src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
+                    /* format('truetype'); */
+                }
+                * {
+                    font-family: NanumGothic !important;
+                }
         body {
             background-color: #EEEDEE;
         }
@@ -122,7 +130,7 @@
         </form>
 
         <div class="ui message">
-            비밀번호가 기억나지 않으세요? <u><a href="#">비밀번호재설정</a></u>
+            아직 계정이 없으시다면,&nbsp;&nbsp;<u><a href="signUp.html">회원가입</a></u>
             <!-- 위 코드 수정 필요-->
         </div>
     </div>

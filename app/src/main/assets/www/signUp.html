@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
+    <title>회원가입(SIGN UP)</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- css 가져오기 -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css"> -->
+    <!-- 추가 css -->
+    <style type="text/css">
+        @font-face {
+                    font-family: 'NanumGothic';
+                    src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
+                    /* format('truetype'); */
+                }
+                * {
+                    font-family: NanumGothic !important;
+                }
+        body {
+            background-color: #EEEDEE;
+        }
+        body>.grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+		function error_check(){
+			if(!$("#user_id").val()){
+				$('#err_id').css('display', 'block');
+			}
+			else{
+				$('#err_id').css('display', 'none');
+			}
+		}
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <div class="card bg-light">
+
+        <h3>회원가입</h3>
+        <div class="yr_contents">
+            <div>
+                <p>필수 정보</p>
+                <hr>
+            </div>
+            <div><!-- ID -->
+                <label>ID</label>
+                <div>
+                    <input type="text" id="user_id" name="user_id" placeholder="아이디를 입력하세요." onblur="error_check()">
+                    <button>중복확인</button>
+                    <small id="err_id" style="display: none;">필수 입력사항 입니다.</small>
+                </div>
+            </div>
+            <div><!-- Name -->
+                <label>Name(or Nickname)</label>
+                <div>
+                    <input type="text" name="user_name" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
+                </div>
+            </div>
+            <div><!-- Password -->
+                <label>Password</label>
+                <div>
+                    <input type="password" id="user_pw" name="user_pw" placeholder="비밀번호">
+                </div>
+                <!-- 비밀번호 확인 영역에 focus out 했을 경우 위의 패스워드와 일치하지 않으면 경고 표시하기-->
+                <label>Confirm Password</label>
+                <div>
+                    <input type="password" id="user_pwcheck" name="user_pwcheck" placeholder="비밀번호 확인">
+                </div>
+            </div>
+            <div>
+                <p>선택 정보</p>
+                <hr>
+            </div>
+
+            <div><!-- Email -->
+                <label>Email</label>
+                <div>
+                    <input type="email" id="email" name="email" placeholder="email">
+                </div>
+            </div>
+            <div><!-- Tel -->
+                <label>Phone number</label>
+                <div>
+                    <input type="tel" id="cp_num" name="cp_num" placeholder="010-1234-5678">
+                </div>
+            </div>
+            <div><!-- Birth date -->
+                <label>Birth date</label>
+                <div>
+                    <input type="text" id="b_year" name="b_year" maxlength="4" size="8" placeholder="년">
+                    <select id="b_month" name="b_month">
+                        <option value="" selected>월</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                    <input type="text" id="b_day" name="b_day" maxlength="2" size="4" placeholder="일">
+                </div>
+            </div>
+            <div><!--회원가입 완료 버튼-->
+                <button id="signUp">가입하기</button>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
