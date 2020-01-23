@@ -10,15 +10,18 @@
     <!-- css 가져오기 -->
     <!-- <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css"> -->
     <!-- 추가 css -->
+    <link href="css/yr_style.css" rel="stylesheet">
     <style type="text/css">
         @font-face {
-                    font-family: 'NanumGothic';
-                    src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
-                    /* format('truetype'); */
-                }
-                * {
-                    font-family: NanumGothic !important;
-                }
+        	font-family: 'NanumGothic';
+			src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
+			/* format('truetype'); */
+		}
+		* {
+			font-family: NanumGothic !important;
+		}
+
+        /*
         body {
             background-color: #EEEDEE;
         }
@@ -30,8 +33,7 @@
         }
         .column {
             max-width: 450px;
-        }
-
+        } */
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -44,14 +46,107 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
-		function error_check(){
-			if(!$("#user_id").val()){
-				$('#err_id').css('display', 'block');
-			}
-			else{
-				$('#err_id').css('display', 'none');
-			}
-		}
+
+
+    $(function(){
+    	// form_err 클래스들 숨기기
+    	$(".form_err").css({
+    		display : "none"
+    	});
+    });
+
+
+    $(document).on('blur','input[name=user_input]',function(){
+    	var input = $(this).val(); //this에는 위에서 선택한 객체인 input 태그가 옴
+
+    	if(!$.trim(input)){ //공백을 제거하고 null인지 검사
+    		$("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 표시
+        		"display" : "block"
+        	});
+
+    		$(this).val(""); //this.val()로 쓰면 에러. $()로 꼭 감싸주기 //공백이 포함됐을 수 있으니 빈칸으로 초기화해주기
+    	}
+    	else{
+    		$("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 숨기기
+        		"display" : "none"
+        	});
+    	}
+    });
+
+
+    $(document).on('blur', 'input[name=user_pw]', function(){
+    	var input_pw = $(this).val();
+
+    	// 특수문자, 문자, 숫자 포함 형태의 8~16자 이내의 패스워드 정규표현식
+    	//var regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+    	//var regex = /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+
+    	// 8~16자 이내의 영문 또는 숫자 정규표현식
+    	var regex = /^.*(?=^.{8,16}$)[a-zA-Z0-9]*$/;
+
+
+    	// null인지 검사 // 공백검사 안하는 이유는 아래 정규표현식에서 공백까지 걸러주기 때문-> 사용자가 경고메세지를 보고 직접 고치게 함
+    	if(!input_pw){ // null이라면
+    		$("small[id=user_pw]").css({ // '필수 작성' 메시지 표시
+        		"display" : "block"
+        	});
+    		$("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
+				"display" : "none"
+			});
+    	}
+    	else{ // null이 아니라면
+    		if(!regex.test(input_pw)){ // false 이면 //정규식 검사에 맞지 않으면
+    			$("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 표시
+    				"display" : "block"
+    			});
+    			$("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
+            		"display" : "none"
+            	});
+    		}
+    		else{ //정규식 조건 충족한다면
+    			$("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
+    				"display" : "none"
+    			});
+    			$("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
+            		"display" : "none"
+            	});
+    		}
+    	}
+    });
+
+
+    $(document).on('blur', 'input[name=user_pwcheck]', function(){
+    	var pwcheck = $(this).val();
+    	var input_pw = $("#user_pw").val();
+    	if(!pwcheck){ // null이라면
+    		$("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 표시
+    			"display": "block"
+    		});
+    		$("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
+    			"display": "none"
+    		});
+    	}
+    	else{ // null이 아니라면
+    		if(pwcheck !== input_pw){ //비밀번호 확인 과 비밀번호가 다르면
+        		$("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 표시
+        			"display": "block"
+        		});
+        		$("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
+        			"display": "none"
+        		});
+        	}
+        	else{ // 비밀번호 확인과 비밀번호가 같으면
+        		$("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
+        			"display": "none"
+        		});
+        		$("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
+        			"display": "none"
+        		});
+        	}
+    	}
+    });
+
+
     </script>
 </head>
 <body>
@@ -68,26 +163,31 @@
             <div><!-- ID -->
                 <label>ID</label>
                 <div>
-                    <input type="text" id="user_id" name="user_id" placeholder="아이디를 입력하세요." onblur="error_check()">
+                    <input type="text" id="user_id" name="user_input" maxlength="20" size="24" placeholder="아이디를 입력하세요.(20자 이내)">
                     <button>중복확인</button>
-                    <small id="err_id" style="display: none;">필수 입력사항 입니다.</small>
+                    <small class="form_err" id="user_id" >필수 입력사항 입니다.</small>
                 </div>
             </div>
             <div><!-- Name -->
                 <label>Name(or Nickname)</label>
                 <div>
-                    <input type="text" name="user_name" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
+                    <input type="text" id="user_name" name="user_input" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
+                    <small class="form_err" id="user_name" >필수 입력사항 입니다.</small>
                 </div>
             </div>
             <div><!-- Password -->
                 <label>Password</label>
                 <div>
-                    <input type="password" id="user_pw" name="user_pw" placeholder="비밀번호">
+                    <input type="password" id="user_pw" name="user_pw" size="36" placeholder="비밀번호(8~16자 이내의 영문 또는 숫자 조합)">
+                    <small class="form_err" id="user_pw" >필수 입력사항 입니다.</small>
+                    <small class="form_err" id="user_pwvalid" >8~16자 영문 또는 숫자를 사용하여 조합하세요.(공백 불가)</small>
                 </div>
                 <!-- 비밀번호 확인 영역에 focus out 했을 경우 위의 패스워드와 일치하지 않으면 경고 표시하기-->
                 <label>Confirm Password</label>
                 <div>
-                    <input type="password" id="user_pwcheck" name="user_pwcheck" placeholder="비밀번호 확인">
+                    <input type="password" id="user_pwcheck" name="user_pwcheck" size="36" placeholder="비밀번호 확인">
+                    <small class="form_err" id="user_pwcheck" >필수 입력사항 입니다.</small>
+                    <small class="form_err" id="user_pwcheckErr" >비밀번호가 일치하지 않습니다.</small>
                 </div>
             </div>
             <div>

@@ -96,3 +96,6 @@ table.table td{
         			width: 180px;
         		}
 
+.form_err{
+    color: #ff0000;
+}
