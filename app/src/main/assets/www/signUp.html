@@ -52,7 +52,6 @@
     <script type="text/javascript">
     var idDefault = "-1";
     var idSuccess = "0";
-    var idFail = "1";
 
     $(function(){
         // form_err 클래스들 숨기기
@@ -90,14 +89,22 @@
         });
 
 
-        /*
-        $("#signUp").click(function(){
-            var params = {};
 
-            var id = $("#user_id").val();
-            var pw = $("#user_pw").val();
+        $("#signUp").click(function(){
+            var idState = $("#overlapCheck").val();
+            if(idState == idDefault){ // 중복확인이 제대로 되지 않은 경우
+                alert('아이디 중복확인을 해주세요.');
+                return false;
+            }
+            else{
+                alert('회원가입 완료');
+            }
+            //var params = {};
+
+            //var id = $("#user_id").val();
+            //var pw = $("#user_pw").val();
         });
-        */
+
 
     });
 
@@ -289,8 +296,8 @@
             <div><!-- ID -->
                 <label>ID</label>
                 <div>
-                    <input type="text" id="user_id" name="user_input" class="form-control float-left" maxlength="20" size="24" placeholder="아이디를 입력하세요.(20자 이내)">
-                    <button id="idcheck" class="btn btn-outline-secondary float-left">중복확인</button>
+                    <input type="text" id="user_id" name="user_input" class="form-control" maxlength="20" size="24" placeholder="아이디를 입력하세요.(20자 이내)">
+                    <button id="idcheck" class="btn btn-outline-secondary">중복확인</button>
                     <input type="hidden" id="overlapCheck" value="-1">
                     <small class="form_err" id="user_id" >필수 입력사항 입니다.</small>
                 </div>
