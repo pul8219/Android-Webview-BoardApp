@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, intial-scale=1"> <!--화면을 모바일 크기에 맞춰주는 작업-->
     <title>회원가입(SIGN UP)</title>
+
+    <!-- css 가져오기 -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css"> -->
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- css 가져오기 -->
-    <!-- <link rel="stylesheet" type="text/css" href="css/tem_semantic.min.css"> -->
     <!-- 추가 css -->
     <link href="css/yr_style.css" rel="stylesheet">
     <style type="text/css">
         @font-face {
-        	font-family: 'NanumGothic';
-			src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
-			/* format('truetype'); */
-		}
-		* {
-			font-family: NanumGothic !important;
-		}
+            font-family: 'NanumGothic';
+            src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
+            /* format('truetype'); */
+        }
+        * {
+            font-family: NanumGothic !important;
+        }
 
         /*
         body {
@@ -45,106 +46,231 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript">
 
+
+
+    <script type="text/javascript">
+    var idDefault = "-1";
+    var idSuccess = "0";
+    var idFail = "1";
 
     $(function(){
-    	// form_err 클래스들 숨기기
-    	$(".form_err").css({
-    		display : "none"
-    	});
+        // form_err 클래스들 숨기기
+        $(".form_err").css({
+            display : "none"
+        });
+
+        var date = new Date();
+        var year = date.getFullYear();
+        var selectYear = document.getElementById("b_year");
+        var year_optionIndex = 0;
+        for(var i = year-100; i <= year; i++){
+            selectYear.add(new Option(i + "년", i) ,year_optionIndex++);
+        }
+
+        var selectMonth = document.getElementById("b_month");
+	    var month_optionIndex = 0;
+	    for(var i=1;i<=12;i++){
+			selectMonth.add(new Option(i+"월",i),month_optionIndex++);
+	    }
+
+        var selectDay = document.getElementById("b_day");
+	    var day_optionIndex = 0;
+	    for(var i=1;i<=31;i++){
+			    selectDay.add(new Option(i+"일",i),day_optionIndex++);
+	    }
+
+
+
+        // 아이디 '중복확인' 체크
+        $("#idcheck").click(function(){
+            var id = $("#user_id").val();
+            window.board.userIdCheck(id);
+
+        });
+
+
+        /*
+        $("#signUp").click(function(){
+            var params = {};
+
+            var id = $("#user_id").val();
+            var pw = $("#user_pw").val();
+        });
+        */
+
     });
 
 
+    // input 태그들 null 검사
     $(document).on('blur','input[name=user_input]',function(){
-    	var input = $(this).val(); //this에는 위에서 선택한 객체인 input 태그가 옴
+        var input = $(this).val(); //this에는 위에서 선택한 객체인 input 태그가 옴
 
-    	if(!$.trim(input)){ //공백을 제거하고 null인지 검사
-    		$("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 표시
-        		"display" : "block"
-        	});
+        if(!$.trim(input)){ //공백을 제거하고 null인지 검사
+            $("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 표시
+                "display" : "block"
+            });
 
-    		$(this).val(""); //this.val()로 쓰면 에러. $()로 꼭 감싸주기 //공백이 포함됐을 수 있으니 빈칸으로 초기화해주기
-    	}
-    	else{
-    		$("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 숨기기
-        		"display" : "none"
-        	});
-    	}
+            $(this).val(""); //this.val()로 쓰면 에러. $()로 꼭 감싸주기 //공백이 포함됐을 수 있으니 빈칸으로 초기화해주기
+        }
+        else{
+            $("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 숨기기
+                "display" : "none"
+            });
+        }
     });
 
 
+    // 비밀번호 유효성 검사
     $(document).on('blur', 'input[name=user_pw]', function(){
-    	var input_pw = $(this).val();
+        var input_pw = $(this).val();
 
-    	// 특수문자, 문자, 숫자 포함 형태의 8~16자 이내의 패스워드 정규표현식
-    	//var regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
-    	//var regex = /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+        // 특수문자, 문자, 숫자 포함 형태의 8~16자 이내의 패스워드 정규표현식
+        //var regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+        //var regex = /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
 
-    	// 8~16자 이내의 영문 또는 숫자 정규표현식
-    	var regex = /^.*(?=^.{8,16}$)[a-zA-Z0-9]*$/;
+        // 8~16자 이내의 영문 또는 숫자 정규표현식
+        var regex = /^.*(?=^.{8,16}$)[a-zA-Z0-9]*$/;
 
 
-    	// null인지 검사 // 공백검사 안하는 이유는 아래 정규표현식에서 공백까지 걸러주기 때문-> 사용자가 경고메세지를 보고 직접 고치게 함
-    	if(!input_pw){ // null이라면
-    		$("small[id=user_pw]").css({ // '필수 작성' 메시지 표시
-        		"display" : "block"
-        	});
-    		$("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
-				"display" : "none"
-			});
-    	}
-    	else{ // null이 아니라면
-    		if(!regex.test(input_pw)){ // false 이면 //정규식 검사에 맞지 않으면
-    			$("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 표시
-    				"display" : "block"
-    			});
-    			$("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
-            		"display" : "none"
-            	});
-    		}
-    		else{ //정규식 조건 충족한다면
-    			$("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
-    				"display" : "none"
-    			});
-    			$("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
-            		"display" : "none"
-            	});
-    		}
-    	}
+        // null인지 검사 // 공백검사 안하는 이유는 아래 정규표현식에서 공백까지 걸러주기 때문-> 사용자가 경고메세지를 보고 직접 고치게 함
+        if(!input_pw){ // null이라면
+            $("small[id=user_pw]").css({ // '필수 작성' 메시지 표시
+                "display" : "block"
+            });
+            $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
+                "display" : "none"
+            });
+        }
+        else{ // null이 아니라면
+            if(!regex.test(input_pw)){ // false 이면 //정규식 검사에 맞지 않으면
+                $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 표시
+                    "display" : "block"
+                });
+                $("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
+                    "display" : "none"
+                });
+            }
+            else{ //정규식 조건 충족한다면
+                $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
+                    "display" : "none"
+                });
+                $("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
+                    "display" : "none"
+                });
+            }
+        }
     });
 
 
+    // 비밀번호 확인 유효성 검사
     $(document).on('blur', 'input[name=user_pwcheck]', function(){
-    	var pwcheck = $(this).val();
-    	var input_pw = $("#user_pw").val();
-    	if(!pwcheck){ // null이라면
-    		$("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 표시
-    			"display": "block"
-    		});
-    		$("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
-    			"display": "none"
-    		});
-    	}
-    	else{ // null이 아니라면
-    		if(pwcheck !== input_pw){ //비밀번호 확인 과 비밀번호가 다르면
-        		$("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 표시
-        			"display": "block"
-        		});
-        		$("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
-        			"display": "none"
-        		});
-        	}
-        	else{ // 비밀번호 확인과 비밀번호가 같으면
-        		$("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
-        			"display": "none"
-        		});
-        		$("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
-        			"display": "none"
-        		});
-        	}
-    	}
+        var pwcheck = $(this).val();
+        var input_pw = $("#user_pw").val();
+        if(!pwcheck){ // null이라면
+            $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 표시
+                "display": "block"
+            });
+            $("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
+                "display": "none"
+            });
+        }
+        else{ // null이 아니라면
+            if(pwcheck !== input_pw){ //비밀번호 확인 과 비밀번호가 다르면
+                $("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 표시
+                    "display": "block"
+                });
+                $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
+                    "display": "none"
+                });
+            }
+            else{ // 비밀번호 확인과 비밀번호가 같으면
+                $("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
+                    "display": "none"
+                });
+                $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
+                    "display": "none"
+                });
+            }
+        }
     });
+
+    // 이메일 유효성 검사
+    $(document).on('blur', 'input[name=email]', function(){
+        var email = $(this).val();
+        var regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+        if(!regex.test(email)){ // 정규식 검사에 맞지 않으면
+            $("small[id=email]").css({
+                "display": "block"
+            });
+        }
+        else{
+            $("small[id=email]").css({ //정규식 검사 맞으면
+                "display": "none"
+            });
+        }
+
+    });
+
+
+    // 핸드폰 번호 유효성 검사
+    $(document).on('blur', 'input[name=cp_num]', function(){
+        var cp_num = $(this).val();
+        var regex = /^\d{3}-\d{3,4}-\d{4}$/;
+
+        if(!regex.test(cp_num)){ // 정규식 검사에 맞지 않으면
+            $("small[id=cp_num]").css({
+                "display": "block"
+            });
+        }
+        else{
+            $("small[id=cp_num]").css({ //정규식 검사 맞으면
+                "display": "none"
+            });
+        }
+
+    });
+
+
+    $(document).on('blur', 'select[name=b_day]', function(){
+        var b_year = $("#b_year option:selected").val();
+        var b_month = $("#b_month option:selected").val();
+        var b_day = $("#b_day option:selected").val();
+        var isleap = (b_year % 4 == 0 && (b_year % 100 != 0 || b_year % 400 == 0));
+
+        if(b_year < 1900 || b_day < 1 || b_day > 31 || ((b_month==4||b_month==6||b_month==9||b_month==11)&&b_day==31) || (b_month==2&&b_day>29) || (b_month==2&&(b_day==29 && !isleap))){
+            $("small[id=birthdate]").css({
+                "display": "block"
+            });
+        }
+        else{
+            $("small[id=birthdate]").css({
+                "display": "none"
+            });
+        }
+
+    });
+
+
+    function userIdCheck_callback(isPass){
+        if(isPass){ // 중복되는 아이디가 없어 아이디 사용가능한 경우
+            alert('사용 가능한 아이디입니다.');
+			$("#overlapCheck").val(idSuccess);
+			$("input[id=user_id]").attr("class", "form-control is-valid");
+			//$("input[id=user_id]").addClass('form-control is-valid');
+			//$("input[id=user_id]").removeClass('form-control is-invalid');
+        }
+        else{ // 중복되는 아이디가 있어 사용이 불가한 경우
+            alert('이미 사용중인 아이디입니다.');
+            $("#overlapCheck").val(idDefault);
+            $("input[id=user_id]").attr("class", "form-control is-invalid");
+			//$("input[id=user_id]").addClass('form-control is-invalid');
+			//$("input[id=user_id]").removeClass('form-control is-valid');
+        }
+
+    }
+
 
 
     </script>
@@ -163,29 +289,30 @@
             <div><!-- ID -->
                 <label>ID</label>
                 <div>
-                    <input type="text" id="user_id" name="user_input" maxlength="20" size="24" placeholder="아이디를 입력하세요.(20자 이내)">
-                    <button>중복확인</button>
+                    <input type="text" id="user_id" name="user_input" class="form-control float-left" maxlength="20" size="24" placeholder="아이디를 입력하세요.(20자 이내)">
+                    <button id="idcheck" class="btn btn-outline-secondary float-left">중복확인</button>
+                    <input type="hidden" id="overlapCheck" value="-1">
                     <small class="form_err" id="user_id" >필수 입력사항 입니다.</small>
                 </div>
             </div>
             <div><!-- Name -->
                 <label>Name(or Nickname)</label>
                 <div>
-                    <input type="text" id="user_name" name="user_input" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
+                    <input type="text" id="user_name" name="user_input" class="form-control" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
                     <small class="form_err" id="user_name" >필수 입력사항 입니다.</small>
                 </div>
             </div>
             <div><!-- Password -->
                 <label>Password</label>
                 <div>
-                    <input type="password" id="user_pw" name="user_pw" size="36" placeholder="비밀번호(8~16자 이내의 영문 또는 숫자 조합)">
+                    <input type="password" id="user_pw" name="user_pw" class="form-control" size="36" placeholder="비밀번호(8~16자 이내의 영문 또는 숫자 조합)">
                     <small class="form_err" id="user_pw" >필수 입력사항 입니다.</small>
                     <small class="form_err" id="user_pwvalid" >8~16자 영문 또는 숫자를 사용하여 조합하세요.(공백 불가)</small>
                 </div>
                 <!-- 비밀번호 확인 영역에 focus out 했을 경우 위의 패스워드와 일치하지 않으면 경고 표시하기-->
                 <label>Confirm Password</label>
                 <div>
-                    <input type="password" id="user_pwcheck" name="user_pwcheck" size="36" placeholder="비밀번호 확인">
+                    <input type="password" id="user_pwcheck" name="user_pwcheck" class="form-control" size="36" placeholder="비밀번호 확인">
                     <small class="form_err" id="user_pwcheck" >필수 입력사항 입니다.</small>
                     <small class="form_err" id="user_pwcheckErr" >비밀번호가 일치하지 않습니다.</small>
                 </div>
@@ -198,39 +325,36 @@
             <div><!-- Email -->
                 <label>Email</label>
                 <div>
-                    <input type="email" id="email" name="email" placeholder="email">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="email">
+                    <small class="form_err" id="email">이메일 형식이 올바르지 않습니다.</small>
                 </div>
             </div>
             <div><!-- Tel -->
                 <label>Phone number</label>
                 <div>
-                    <input type="tel" id="cp_num" name="cp_num" placeholder="010-1234-5678">
+                    <input type="tel" id="cp_num" name="cp_num" class="form-control" placeholder="010-1234-5678">
+                    <small class="form_err" id="cp_num">전화번호 형식이 올바르지 않습니다.</small>
                 </div>
             </div>
             <div><!-- Birth date -->
                 <label>Birth date</label>
                 <div>
-                    <input type="text" id="b_year" name="b_year" maxlength="4" size="8" placeholder="년">
-                    <select id="b_month" name="b_month">
-                        <option value="" selected>월</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
+                    <select id="b_year" name="b_year" class="form-control">
+                        <option>- 연도 -</option>
                     </select>
-                    <input type="text" id="b_day" name="b_day" maxlength="2" size="4" placeholder="일">
+<!--                    <input type="" value="YYYY-MM-DD" id="b_year" name="b_year" class="form-control" maxlength="4" size="8" placeholder="년">-->
+                    <select id="b_month" name="b_month" class="form-control">
+                        <option value="" selected>- 월 -</option>
+                    </select>
+                    <select id="b_day" name="b_day" class="form-control">
+                        <option value="" selected>- 일 -</option>
+                    </select>
+<!--                    <input type="text" id="b_day" name="b_day" class="form-control" maxlength="2" size="4" placeholder="- 일 -">-->
+                    <small class="form_err" id="birthdate">생년월일을 다시 확인해주세요.</small>
                 </div>
             </div>
             <div><!--회원가입 완료 버튼-->
-                <button id="signUp">가입하기</button>
+                <button id="signUp" class="btn btn-outline-secondary">가입하기</button>
             </div>
 
 

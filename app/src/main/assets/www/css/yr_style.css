@@ -99,3 +99,22 @@ table.table td{
 .form_err{
     color: #ff0000;
 }
+
+/*
+.signup-form{
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.isvalid{
+    border-color: #28a745;
+}
+
+.isinvalid{
+    border-color: #dc3545;
+}
+*/
+.form-control{
+    width: 70%;
+}

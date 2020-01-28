@@ -102,16 +102,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     // 아이디가 일치하는 회원의 정보를 가져오는 쿼리
-//    public JSONArray getUserById(String id){
-//        SQLiteDatabase db = getWritableDatabase();
-//
-//        String sql = "SELECT * FROM USER " +
-//                "WHERE " +
-//                "USER_ID =" + id ;
-//
-//        Cursor cursor = db.rawQuery(sql, null); //위의 select문 실행
-//        return getJsonFromCursor(cursor);
-//    }
+    public JSONArray getUserById(String id){
+        SQLiteDatabase db = getWritableDatabase();
+
+        String sql = "SELECT * FROM USER " +
+                "WHERE " +
+                "USER_ID = ? ";
+
+        String[] param = {id};
+        Cursor cursor = db.rawQuery(sql, param); //위의 select문 실행
+        return getJsonFromCursor(cursor);
+    }
 
 
     // 모든 게시글의 정보를 가져오는 쿼리

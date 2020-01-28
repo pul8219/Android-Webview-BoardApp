@@ -120,6 +120,28 @@ public class JSInterface {
 //    }
 
 
+    @JavascriptInterface
+    public void userIdCheck(final String user_id){
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                    JSONArray user = mDatabase.getUserById(user_id);
+
+                    boolean data;
+
+                    if(user.length() > 0){ // 일치하는 데이터 있을 경우 -> 아이디 중복
+                        data = false;
+                    }
+                    else{ // 일치하는 데이터 없을 경우 -> 아이디 사용 가능
+                        data = true;
+                    }
+
+                    mWebView.loadUrl("javascript:userIdCheck_callback("+ data + ")");
+            }
+        });
+
+    }
+
 
 //    @JavascriptInterface
 //    public void getUserById(final String id) {
