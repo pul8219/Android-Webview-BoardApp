@@ -50,14 +50,19 @@
 
 
     <script type="text/javascript">
-    var idDefault = "-1";
-    var idSuccess = "0";
+    var Default = "-1";
+    var Success = "0";
 
     $(function(){
         // form_err 클래스들 숨기기
         $(".form_err").css({
             display : "none"
         });
+
+
+        //비밀번호 일치,불일치 경고문 숨기기
+        $('#alert-success').hide();
+        $('#alert-danger').hide();
 
         var date = new Date();
         var year = date.getFullYear();
@@ -84,6 +89,11 @@
         // 아이디 '중복확인' 체크
         $("#idcheck").click(function(){
             var id = $("#user_id").val();
+            if(!id){ // 아이디를 입력하지 않은 경우
+                alert('아이디를 입력해주세요.');
+                return false;
+            }
+            // 입력한 아이디가 있을 경우
             window.board.userIdCheck(id);
 
         });
@@ -92,10 +102,20 @@
 
         $("#signUp").click(function(){
             var idState = $("#overlapCheck").val();
-            if(idState == idDefault){ // 중복확인이 제대로 되지 않은 경우
+            //var nameState = $("#submitCheckName").val();
+            //var pwState = $("#submitCheckPw").val();
+            //var pwconState = $("#submitCheckPwcon").val();
+
+            if(idState == Default){ // 중복확인이 제대로 되지 않은 경우
                 alert('아이디 중복확인을 해주세요.');
                 return false;
             }
+            /*
+            else if(nameState == Default || pwState == Default || pwconState == Default){
+                alert('항목을 확인해주세요');
+                return false;
+            }
+            */
             else{
                 alert('회원가입 완료');
             }
@@ -113,24 +133,44 @@
     $(document).on('blur','input[name=user_input]',function(){
         var input = $(this).val(); //this에는 위에서 선택한 객체인 input 태그가 옴
 
-        if(!$.trim(input)){ //공백을 제거하고 null인지 검사
+        //var input_id = $(this).attr('id'); // 선택된 태그의 id 값 구하기 -> submit 검사를 위해 필요
+        //var submit_state = $("#submitCheckName");
+
+        if(!$.trim(input)){ //공백을 제거하고 null인지 검사, 그 결과 null이라면
             $("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 표시
                 "display" : "block"
             });
 
             $(this).val(""); //this.val()로 쓰면 에러. $()로 꼭 감싸주기 //공백이 포함됐을 수 있으니 빈칸으로 초기화해주기
+
+            // 선택된 태그의 아이디가 user_name 이고 그 항목이 null일 경우, submit 시에 가입이 완료되지 않도록 hidden value를 -1로 지정
+            /*
+            if(input_id == 'user_name'){
+                submit_state.val(Default);
+            }
+            */
+
         }
         else{
             $("small[id=" + this.id + "]").css({ // '필수 작성' 메시지 숨기기
                 "display" : "none"
             });
+
+            // 선택된 태그의 아이디가 user_name 이고 그 항목이 null이 아닐 경우, hidden value를 0로 지정
+            /*
+            if(input_id == 'user_name'){
+            	submit_state.val(Success);
+            }
+            */
         }
     });
+
 
 
     // 비밀번호 유효성 검사
     $(document).on('blur', 'input[name=user_pw]', function(){
         var input_pw = $(this).val();
+        //var submit_state = $("#submitCheckPw");
 
         // 특수문자, 문자, 숫자 포함 형태의 8~16자 이내의 패스워드 정규표현식
         //var regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
@@ -148,6 +188,8 @@
             $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
                 "display" : "none"
             });
+
+            //submit_state.val(Default);
         }
         else{ // null이 아니라면
             if(!regex.test(input_pw)){ // false 이면 //정규식 검사에 맞지 않으면
@@ -157,6 +199,8 @@
                 $("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
                     "display" : "none"
                 });
+
+                //submit_state.val(Default);
             }
             else{ //정규식 조건 충족한다면
                 $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
@@ -165,6 +209,27 @@
                 $("small[id=user_pw]").css({ // '필수 작성' 메시지 숨기기
                     "display" : "none"
                 });
+
+                //submit_state.val(Success);
+            }
+        }
+    });
+
+
+    // 비밀번호 확인 유효성 검사(new)
+    $(document).on('keyup','input[type=password]', function(){
+        var input_pw = $('input[id=user_pw]').val();
+        var pwcheck = $('input[id=user_pwcheck]').val();
+        if(input_pw != "" || pwcheck != ""){
+            if(input_pw == pwcheck){
+                $("#alert-success").show();
+                $("#alert-danger").hide();
+                $("#signUp").removeAttr("disabled");
+            }
+            else{
+                $("#alert-danger").show();
+                $("#alert-success").hide();
+                $("#signUp").attr("disabled", "disabled");
             }
         }
     });
@@ -174,14 +239,26 @@
     $(document).on('blur', 'input[name=user_pwcheck]', function(){
         var pwcheck = $(this).val();
         var input_pw = $("#user_pw").val();
+        //var submit_state = $("#submitCheckPwcon");
+
         if(!pwcheck){ // null이라면
             $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 표시
                 "display": "block"
             });
+            /*
             $("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
                 "display": "none"
             });
+            */
+
+            //submit_state.val(Default);
         }
+        else{
+            $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
+                "display": "none"
+            });
+        }
+        /*
         else{ // null이 아니라면
             if(pwcheck !== input_pw){ //비밀번호 확인 과 비밀번호가 다르면
                 $("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 표시
@@ -190,6 +267,8 @@
                 $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
                     "display": "none"
                 });
+
+                //submit_state.val(Default);
             }
             else{ // 비밀번호 확인과 비밀번호가 같으면
                 $("small[id=user_pwcheckErr]").css({ // '비밀번호 불일치' 메시지 숨기기
@@ -198,9 +277,12 @@
                 $("small[id=user_pwcheck]").css({ // '필수 작성' 메시지 숨기기
                     "display": "none"
                 });
+
+                //submit_state.val(Success);
             }
-        }
+        }*/
     });
+
 
     // 이메일 유효성 검사
     $(document).on('blur', 'input[name=email]', function(){
@@ -263,14 +345,14 @@
     function userIdCheck_callback(isPass){
         if(isPass){ // 중복되는 아이디가 없어 아이디 사용가능한 경우
             alert('사용 가능한 아이디입니다.');
-			$("#overlapCheck").val(idSuccess);
+			$("#overlapCheck").val(Success);
 			$("input[id=user_id]").attr("class", "form-control is-valid");
 			//$("input[id=user_id]").addClass('form-control is-valid');
 			//$("input[id=user_id]").removeClass('form-control is-invalid');
         }
         else{ // 중복되는 아이디가 있어 사용이 불가한 경우
             alert('이미 사용중인 아이디입니다.');
-            $("#overlapCheck").val(idDefault);
+            $("#overlapCheck").val(Default);
             $("input[id=user_id]").attr("class", "form-control is-invalid");
 			//$("input[id=user_id]").addClass('form-control is-invalid');
 			//$("input[id=user_id]").removeClass('form-control is-valid');
@@ -307,6 +389,7 @@
                 <div>
                     <input type="text" id="user_name" name="user_input" class="form-control" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
                     <small class="form_err" id="user_name" >필수 입력사항 입니다.</small>
+                    <input type="hidden" id="submitCheckName" value="-1">
                 </div>
             </div>
             <div><!-- Password -->
@@ -315,6 +398,7 @@
                     <input type="password" id="user_pw" name="user_pw" class="form-control" size="36" placeholder="비밀번호(8~16자 이내의 영문 또는 숫자 조합)">
                     <small class="form_err" id="user_pw" >필수 입력사항 입니다.</small>
                     <small class="form_err" id="user_pwvalid" >8~16자 영문 또는 숫자를 사용하여 조합하세요.(공백 불가)</small>
+                    <input type="hidden" id="submitCheckPw" value="-1">
                 </div>
                 <!-- 비밀번호 확인 영역에 focus out 했을 경우 위의 패스워드와 일치하지 않으면 경고 표시하기-->
                 <label>Confirm Password</label>
@@ -322,7 +406,10 @@
                     <input type="password" id="user_pwcheck" name="user_pwcheck" class="form-control" size="36" placeholder="비밀번호 확인">
                     <small class="form_err" id="user_pwcheck" >필수 입력사항 입니다.</small>
                     <small class="form_err" id="user_pwcheckErr" >비밀번호가 일치하지 않습니다.</small>
+                    <input type="hidden" id="submitCheckPwcon" value="-1">
                 </div>
+                <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+                <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
             </div>
             <div>
                 <p>선택 정보</p>
@@ -343,20 +430,27 @@
                     <small class="form_err" id="cp_num">전화번호 형식이 올바르지 않습니다.</small>
                 </div>
             </div>
+            <div> <!-- Gender -->
+                <label>성별</label>
+                <div>
+                    <input type="radio" id="female" name="gender" value="1">여성
+                    <input type="radio" id="male" name="gender" value="2">남성
+                </div>
+            </div>
             <div><!-- Birth date -->
                 <label>Birth date</label>
                 <div>
                     <select id="b_year" name="b_year" class="form-control">
                         <option>- 연도 -</option>
                     </select>
-<!--                    <input type="" value="YYYY-MM-DD" id="b_year" name="b_year" class="form-control" maxlength="4" size="8" placeholder="년">-->
+                    <!--                    <input type="" value="YYYY-MM-DD" id="b_year" name="b_year" class="form-control" maxlength="4" size="8" placeholder="년">-->
                     <select id="b_month" name="b_month" class="form-control">
                         <option value="" selected>- 월 -</option>
                     </select>
                     <select id="b_day" name="b_day" class="form-control">
                         <option value="" selected>- 일 -</option>
                     </select>
-<!--                    <input type="text" id="b_day" name="b_day" class="form-control" maxlength="2" size="4" placeholder="- 일 -">-->
+                    <!--                    <input type="text" id="b_day" name="b_day" class="form-control" maxlength="2" size="4" placeholder="- 일 -">-->
                     <small class="form_err" id="birthdate">생년월일을 다시 확인해주세요.</small>
                 </div>
             </div>

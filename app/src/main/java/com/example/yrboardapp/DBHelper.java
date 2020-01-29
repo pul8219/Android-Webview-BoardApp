@@ -70,14 +70,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(" +
                 "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
                 ")" +
-                "VALUES('pul8219','1234','박유림', (SELECT date('now')),'여자', '010-1111-1111','pul8219@naver.com', (SELECT date('now')))";
+                "VALUES('pul8219','1234','박유림', (SELECT date('now')), 1, '010-1111-1111','pul8219@naver.com', (SELECT date('now')))";
 
         // 테스트용 회원2
         String sql2 = "INSERT INTO USER " +
                 "(" +
                 "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
                 ")" +
-                "VALUES('a','a','더조인', (SELECT date('now')),'남자', '010-2222-2222','a@naver.com', (SELECT date('now')))";
+                "VALUES('a','a','더조인', (SELECT date('now')), 2, '010-2222-2222','a@naver.com', (SELECT date('now')))";
 
         db.execSQL(sql);
         db.execSQL(sql2);
