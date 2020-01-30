@@ -70,18 +70,81 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(" +
                 "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
                 ")" +
-                "VALUES('pul8219','1234','박유림', (SELECT date('now')), 1, '010-1111-1111','pul8219@naver.com', (SELECT date('now')))";
+                "VALUES('pul8219','1234','박유림', (SELECT date('now')), '1', '010-1111-1111','pul8219@naver.com', (SELECT date('now')))";
 
         // 테스트용 회원2
         String sql2 = "INSERT INTO USER " +
                 "(" +
                 "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
                 ")" +
-                "VALUES('a','a','더조인', (SELECT date('now')), 2, '010-2222-2222','a@naver.com', (SELECT date('now')))";
+                "VALUES('a','a','더조인', (SELECT date('now')), '2', '010-2222-2222','a@naver.com', (SELECT date('now')))";
 
         db.execSQL(sql);
         db.execSQL(sql2);
     }
+
+
+    // 회원가입
+    public void insertUser(String id, String pw, String name, String email, String cpnum, String gender, String birth){
+        SQLiteDatabase db = getWritableDatabase();
+
+        String sql = "INSERT INTO USER" +
+                "(" +
+                "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
+                ") " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, (SELECT date('now')))";
+        //현재시간 (SELECT date('now'))
+        //regdate 컬럼에는 회원가입한 현재 날짜를 넣음
+        //sql에 정해지지 않은 값을 ?(물음표)로 표시하는 바인딩 변수 사용 가능
+
+        ArrayList<Object> list = new ArrayList<>();
+
+        list.add(id);
+        list.add(pw);
+        list.add(name);
+        list.add(birth);
+        list.add(gender);
+        list.add(cpnum);
+        list.add(email);
+
+        db.execSQL(sql, list.toArray());
+    }
+
+
+
+
+    //    // 회원가입
+//    // 수정 필요
+//    // birth를 어떻게 받아야 하나? 일단 String으로 해놨음
+//    public void insertUser(String userid, String userpw, String name, String birth, String gender, String phone, String email){
+//        SQLiteDatabase db = getWritableDatabase(); // 읽고 쓰기 위해 DB 연다. 권한이 없거나 디스크가 가득 차면 실패
+//
+//        String sql = "INSERT INTO USER" +
+//                "(" +
+//                "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
+//                ")" +
+//                "VALUES(?, ?, ?, ?, ?, ?, ?, datetime())";
+//        //현재시간 (SELECT date('now'))
+//        //regdate 컬럼에는 회원가입한 현재 시간을 넣음
+//        //sql에 정해지지 않은 값을 ?(물음표)로 표시하는 바인딩 변수 사용 가능
+//
+//        ArrayList<Object> list = new ArrayList<>();
+//
+//        list.add(userid);
+//        list.add(userpw);
+//        list.add(name);
+//        list.add(birth);
+//        list.add(gender);
+//        list.add(phone);
+//        list.add(email);
+//
+//        db.execSQL(sql, list.toArray());
+//
+//        //        db.execSQL("INSERT INTO MEMBER(ID, PASSWORD, NAME, GENDER, BIRTH, TEL, REGDATE)" +
+////                "VALUES('"+vo.getName()+"','"+vo.getId()+"','"+vo.getPw()+"','"+vo.getGender()+"','"+vo.getBirth()+"','"+vo.getCpnum()+"',"+"strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))");
+//    }
+
+
 
 
 
@@ -311,36 +374,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-//    // 회원가입
-//    // 수정 필요
-//    // birth를 어떻게 받아야 하나? 일단 String으로 해놨음
-//    public void insertUser(String userid, String userpw, String name, String birth, String gender, String phone, String email){
-//        SQLiteDatabase db = getWritableDatabase(); // 읽고 쓰기 위해 DB 연다. 권한이 없거나 디스크가 가득 차면 실패
-//
-//        String sql = "INSERT INTO USER" +
-//                "(" +
-//                "USER_ID," + "USER_PW," + "NAME," + "BIRTH," + "GENDER," + "CPNUM," + "EMAIL," + "REGDATE" +
-//                ")" +
-//                "VALUES(?, ?, ?, ?, ?, ?, ?, datetime())";
-//        //현재시간 (SELECT date('now'))
-//        //regdate 컬럼에는 회원가입한 현재 시간을 넣음
-//        //sql에 정해지지 않은 값을 ?(물음표)로 표시하는 바인딩 변수 사용 가능
-//
-//        ArrayList<Object> list = new ArrayList<>();
-//
-//        list.add(userid);
-//        list.add(userpw);
-//        list.add(name);
-//        list.add(birth);
-//        list.add(gender);
-//        list.add(phone);
-//        list.add(email);
-//
-//        db.execSQL(sql, list.toArray());
-//
-//        //        db.execSQL("INSERT INTO MEMBER(ID, PASSWORD, NAME, GENDER, BIRTH, TEL, REGDATE)" +
-////                "VALUES('"+vo.getName()+"','"+vo.getId()+"','"+vo.getPw()+"','"+vo.getGender()+"','"+vo.getBirth()+"','"+vo.getCpnum()+"',"+"strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime'))");
-//    }
 
 
 

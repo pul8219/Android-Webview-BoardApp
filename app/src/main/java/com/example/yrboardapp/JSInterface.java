@@ -113,11 +113,34 @@ public class JSInterface {
     } // end of login() method
 
 
-//    @JavascriptInterface
-//    public void signUp(final String params){ // 회원 가입
-//
-//
-//    }
+    // 회원 가입
+    @JavascriptInterface
+    public void insertUser(final String params){
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    JSONObject obj = new JSONObject(params);
+                    String id = obj.getString("id");
+                    String pw = obj.getString("pw");
+                    String name = obj.getString("name");
+                    String email = obj.getString("email");
+                    String cpnum = obj.getString("cpnum");
+                    String gender = obj.getString("gender");
+                    String b_date = obj.getString("b_date");
+
+                    mDatabase.insertUser(id, pw, name, email, cpnum, gender, b_date);
+
+                    mWebView.loadUrl("javascript:insertUser_callback()");
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
 
 
     @JavascriptInterface

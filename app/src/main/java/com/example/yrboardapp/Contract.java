@@ -21,7 +21,7 @@ public final class Contract {
                 COLUMN_NAME_USERPW + " TEXT NOT NULL," +
                 COLUMN_NAME_NAME + " TEXT NOT NULL," +
                 COLUMN_NAME_BIRTH + " DATE," +
-                COLUMN_NAME_GENDER + " INTEGER," +
+                COLUMN_NAME_GENDER + " TEXT," +
                 COLUMN_NAME_CPNUM + " TEXT," +
                 COLUMN_NAME_EMAIL + " TEXT," +
                 COLUMN_NAME_REGDATE + " DATE" +

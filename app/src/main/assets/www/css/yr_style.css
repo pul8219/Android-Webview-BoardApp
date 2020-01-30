@@ -1,9 +1,35 @@
 @CHARSET "UTF-8";
+/* (1) CSS 템플릿에 있던 공통 css 요소 */
+/*
+body {
+            background-color: #EEEDEE;
+        }
+
+        body>.grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 1000px;
+        }
+
+        .view_btn {
+            cursor: pointer;
+        }
+*/
+/* (1) end*/
+
+
 table.table td{
             width:100%;
             <!--            line-height: 2.5em;-->
             text-align: center;
             vertical-align:middle;
+            color: #404040;
             border: 1px solid #c7c7bc;
 　       }
 
@@ -13,17 +39,27 @@ table.table td{
             border: 1px solid #c7c7bc;
         }
 
-        #align_content {
-            text-align: left;
+        table.table td a{
+            display:block;
+            width:100%;
+            height:100%;
         }
+
+        table.table td a:hover{
+            background-color: #f2e6ff;
+            }
+
+
 
         .segment {
             width: 98%;
         }
+
         table {
             width: 100%;
             table-layout: fixed;
         }
+
         td {
         max-width: 0;
         overflow: hidden;
@@ -31,7 +67,10 @@ table.table td{
         white-space: nowrap;
         }
 
-/**/
+        #align_content {
+            text-align: left;
+        }
+
         #rep_footer{
             background-color: white;
             border: 1px solid lightgray;
@@ -57,6 +96,7 @@ table.table td{
         .violet_color{
             color: #8B5F92;
         }
+
 		.rep_regdate{
 			font-size: 80%;
 		}
@@ -96,25 +136,15 @@ table.table td{
         			width: 180px;
         		}
 
+/* 폼 input과 같은 항목들 아래 뜨는 경고메시지 에러 css */
 .form_err{
     color: #ff0000;
 }
 
-/*
-.signup-form{
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    background-color: white;
-}
-
-.isvalid{
-    border-color: #28a745;
-}
-
-.isinvalid{
-    border-color: #dc3545;
-}
-*/
 .form-control{
-    width: 80%;
+    width: 100%;
+}
+
+.b_date{
+    width: 25%;
 }

@@ -12,13 +12,17 @@
     <!-- 추가 css -->
     <style type="text/css">
     @font-face {
-                    font-family: 'NanumGothic';
-                    src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
-                    /* format('truetype'); */
-                }
-                * {
-                    font-family: NanumGothic !important;
-                }
+    font-family: 'NanumGothic';
+    src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
+    /* format('truetype'); */
+    }
+
+    * {
+    font-family: NanumGothic !important;
+    }
+
+
+    /* (1) CSS 템플릿에 있던 공통 css 요소 */
         body {
             background-color: #EEEDEE;
         }
@@ -38,7 +42,10 @@
         .view_btn {
             cursor: pointer;
         }
+    /* (1) end*/
 
+
+    /* (2) boardMain.html 파일에 따로 있어야 하는 css */
         table.table td {
             width:100%;
 <!--            line-height: 2.5em;-->
@@ -78,7 +85,7 @@
         white-space: nowrap;
         }
 
-
+        /* (2) end */
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

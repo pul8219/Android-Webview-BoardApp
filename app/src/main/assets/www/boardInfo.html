@@ -13,13 +13,15 @@
     <link rel="stylesheet" type="text/css" href="css/yr_style.css">
     <style type="text/css">
         @font-face {
-                    font-family: 'NanumGothic';
-                    src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
-                    /* format('truetype'); */
-                }
-                * {
-                    font-family: NanumGothic !important;
-                }
+            font-family: 'NanumGothic';
+            src: url(file:///android_asset/www/fonts/NanumGothic.ttf)
+            /* format('truetype'); */
+        }
+        * {
+            font-family: NanumGothic !important;
+        }
+
+        /* (1) CSS 템플릿에 있던 공통 css 요소 */
         body {
             background-color: #EEEDEE;
         }
@@ -39,6 +41,8 @@
         .view_btn {
             cursor: pointer;
         }
+        /* (1) end */
+
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -303,7 +307,7 @@
 
     		// 댓글 수정시 보이는 요소
     		html += '<div style="display:none;" id="updateContent' + item.REPLY_NO + '">';
-    		html += '<textarea id="innerText' + item.REPLY_NO + '" name="innerText" style="height:30px; width:200px;">' + reply_content + '</textarea><br>';
+    		html += '<textarea id="innerText' + item.REPLY_NO + '" name="innerText" rows="3" cols="24">' + reply_content + '</textarea><br>';
     		html += '<button id="replyUpdateSubmit' + item.REPLY_NO + '" name="replyUpdateSubmit">수정완료</button>';
     		html += '</div>';
 
