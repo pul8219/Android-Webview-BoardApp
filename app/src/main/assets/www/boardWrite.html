@@ -107,6 +107,25 @@
 
             });
 
+
+
+/*
+            $("#gallery-photo-add").on("change",function(){
+                $(".gallery").html(""), function(e,a){
+                    if(e.files){
+                        var n = e.files.length;
+                        for(i=0; i<n; i++){
+                            var t = new FileReader;
+                            t.onload = function(e){
+                                $($.parseHTML("<img>")).attr("src", e.target.result).appendTo(a)
+                            }, t.readAsDataURL(e.files[i])
+                        }
+                    }
+                }(this, "div.gallery");
+            });
+*/
+
+
         });
 
 
@@ -161,7 +180,8 @@
 
                     </div>
                 </div>
-                <input type="file" id="img">
+                <input type="file" id="gallery-phote-add" accept="image/*">
+                <div class="gallery"></div>
                 <br>
                 <button class="ui fluid large teal submit button" id="write_bbs">작성 완료</button>
             </div>
