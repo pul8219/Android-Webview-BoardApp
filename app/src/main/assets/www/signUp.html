@@ -40,6 +40,13 @@
     <script type="text/javascript">
     var Default = "-1";
     var Success = "0";
+    /*
+    function isUndefined(str){
+        if(typeof str == undefined){
+            return false;
+        }
+    }
+    */
 
     $(function(){
         // form_err 클래스들 숨기기
@@ -81,59 +88,71 @@
         // 아이디 '중복확인' 체크
         $("#idcheck").click(function(){
             var id = $("#user_id").val();
-            if(!id){ // 아이디를 입력하지 않은 경우
+            if(!id){ // 아이디를 입력하지 않은 경우(null인 경우)
+                $("#overlapCheck").val(Default);
+                $("input[id=user_id]").attr("class", "form-control is-invalid");
                 alert('아이디를 입력해주세요.');
                 return false;
             }
-            // 입력한 아이디가 있을 경우
-            window.board.userIdCheck(id);
-
+            else{ // 입력한 아이디가 있을 경우
+                window.board.userIdCheck(id);
+            }
         });
 
 
         // '가입하기' 버튼을 눌렀을 경우
         $("#signUp").click(function(){
             var idState = $("#overlapCheck").val();
-            //var nameState = $("#submitCheckName").val();
-            //var pwState = $("#submitCheckPw").val();
-            //var pwconState = $("#submitCheckPwcon").val();
+
+            // 필수 정보
+            var id = $("input[id=user_id]").val();
+            var pw = $("input[id=user_pw]").val();
+            var pwcheck = $("input[id=user_pwcheck]").val();
+            var name = $("input[id=user_name]").val();
+
+            // 선택 정보
+            var email = $("input[id=email]").val();
+            var cpnum = $("input[id=cp_num]").val();
+            var gender = $("input:radio[name=gender]:checked").val();
+            var b_year = $("#b_year").val();
+            var b_month = $("#b_month").val();
+            var b_day = $("#b_day").val();
+            //console.log("XXXXXXXXXX" + gender);
+            var b_date = "";
+
 
             if(idState == Default){ // 중복확인이 제대로 되지 않은 경우
                 alert('아이디 중복확인을 해주세요.');
                 return false;
             }
-            /*
-            else if(nameState == Default || pwState == Default || pwconState == Default){
+
+            else if(pw == "" || pwcheck == "" || name == ""){
                 alert('항목을 확인해주세요');
                 return false;
             }
-            */
+
             else{
             	var params = {};
 
-            	// 필수 정보
-            	var id = $("input[id=user_id]").val();
-                var pw = $("input[id=user_pw]").val();
-                var name = $("input[id=user_name]").val();
+                if(gender == undefined){ // gender 값이 undefined이면 ""(빈 문자열)로 바꿔주기
+                    gender = "";
+                }
 
-                // 선택 정보
-                var email = $("input[id=email]").val();
-                var cpnum = $("input[id=cp_num]").val();
-                var gender = $("input[name=gender]:checked").val();
+                //console.log("XXXXXXXXXX" + gender);
 
-                // 생년월일 구하기
-                var b_year = $("#b_year").val();
-
-                var b_month = $("#b_month").val();
-                if(parseInt(b_month) < 10){ // '월'이 10 미만일 경우 앞에 0 붙여주기
+                // 생년월일 구하기 - 생년월일 연,월,일이 모두 선택된 경우
+                if(b_year != "" && b_month != "" && b_day != ""){
+                    if(parseInt(b_month) < 10){ // '월'이 10 미만일 경우 앞에 0 붙여주기
                 	b_month = "0" + b_month;
+                    }
+
+                    if(parseInt(b_day) < 10){ // '일'이 10 미만일 경우 앞에 0 붙여주기
+                	b_day = "0" + b_day;
+                    }
+
+                    var b_date = b_year + "-" + b_month + "-" + b_day;
                 }
 
-                var b_day = $("#b_day").val();
-                if(parseInt(b_day) < 10){ // '일'이 10 미만일 경우 앞에 0 붙여주기
-                	b_day = "0" + b_day;
-                }
-                var b_date = b_year + "-" + b_month + "-" + b_day;
 
 				params['id'] = id;
 				params['pw'] = pw;
@@ -144,8 +163,6 @@
 				params['b_date'] = b_date;
 
 				window.board.insertUser(JSON.stringify(params));
-
-                //alert('회원가입 완료');
             }
 
 
@@ -154,6 +171,15 @@
 
     });
 
+
+    // 아이디를 입력하는 input 태그에 키를 누르는 순간 실행
+    $(document).on('keydown', 'input[id=user_id]', function(){
+        $("#overlapCheck").val(Default);
+        $("input[id=user_id]").attr("class", "form-control is-invalid");
+        var test_overlap = $("#overlapCheck").val();
+        //console.log('change event');
+        //console.log(test_overlap);
+    });
 
     // input 태그들 null 검사
     $(document).on('blur','input[name=user_input]',function(){
@@ -500,7 +526,7 @@
                 <label>생년월일</label>
                 <div>
                     <select id="b_year" name="b_year" class="form-control b_date float-left">
-                        <option>- 연도 -</option>
+                        <option value="" selected>- 연도 -</option>
                     </select>
                     <!--                    <input type="" value="YYYY-MM-DD" id="b_year" name="b_year" class="form-control" maxlength="4" size="8" placeholder="년">-->
                     <select id="b_month" name="b_month" class="form-control b_date float-left">

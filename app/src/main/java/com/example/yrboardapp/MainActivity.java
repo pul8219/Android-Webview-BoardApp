@@ -1,7 +1,5 @@
 package com.example.yrboardapp;
 
-//추가
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
