@@ -132,7 +132,7 @@
             }
 
             else{
-            	var params = {};
+                var params = {};
 
                 if(gender == undefined){ // gender 값이 undefined이면 ""(빈 문자열)로 바꿔주기
                     gender = "";
@@ -143,26 +143,26 @@
                 // 생년월일 구하기 - 생년월일 연,월,일이 모두 선택된 경우
                 if(b_year != "" && b_month != "" && b_day != ""){
                     if(parseInt(b_month) < 10){ // '월'이 10 미만일 경우 앞에 0 붙여주기
-                	b_month = "0" + b_month;
+                    b_month = "0" + b_month;
                     }
 
                     if(parseInt(b_day) < 10){ // '일'이 10 미만일 경우 앞에 0 붙여주기
-                	b_day = "0" + b_day;
+                    b_day = "0" + b_day;
                     }
 
                     var b_date = b_year + "-" + b_month + "-" + b_day;
                 }
 
 
-				params['id'] = id;
-				params['pw'] = pw;
-				params['name'] = name;
-				params['email'] = email;
-				params['cpnum'] = cpnum;
-				params['gender'] = gender;
-				params['b_date'] = b_date;
+                params['id'] = id;
+                params['pw'] = pw;
+                params['name'] = name;
+                params['email'] = email;
+                params['cpnum'] = cpnum;
+                params['gender'] = gender;
+                params['b_date'] = b_date;
 
-				window.board.insertUser(JSON.stringify(params));
+                window.board.insertUser(JSON.stringify(params));
             }
 
 
@@ -302,21 +302,20 @@
                 $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 숨기기
                     "display" : "none"
                 });
-                if(input_pw == pwcheck){ // 비밀번호, 비밀번호 확인 일치할 경우
-                    $("#alert-success").show();
-                    $("#alert-danger").hide();
-                    //$("#signUp").removeAttr("disabled");
-                }
-                else{ // 비밀번호, 비밀번호 확인 일치하지 않을 경우
-                    $("#alert-danger").show();
-                    $("#alert-success").hide();
-                    //$("#signUp").attr("disabled", "disabled");
-                }
             }
             else{ // 정규식 검사 결과 false일 경우
                 $("small[id=user_pwvalid]").css({ // '비밀번호 유효성 체크' 메시지 표시
                     "display" : "block"
                 });
+            }
+
+            if(input_pw == pwcheck){ // 비밀번호, 비밀번호 확인 일치할 경우
+                $("#alert-success").show();
+                $("#alert-danger").hide();
+            }
+            else{ // 비밀번호, 비밀번호 확인 일치하지 않을 경우
+                $("#alert-danger").show();
+                $("#alert-success").hide();
             }
 
         }
@@ -444,8 +443,8 @@
     }
 
     function insertUser_callback(){
-    	alert('회원가입이 완료되었습니다. 로그인 해주세요.');
-    	location.replace('signIn.html');
+        alert('회원가입이 완료되었습니다. 로그인 해주세요.');
+        location.replace('signIn.html');
     }
 
 
