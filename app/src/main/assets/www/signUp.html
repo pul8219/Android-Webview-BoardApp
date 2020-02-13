@@ -455,15 +455,16 @@
 
 <div class="container">
     <div class="card bg-light">
-
-        <h3>회원가입</h3>
+        <br>
+        <h3 class="big-title">회원가입</h3>
         <div class="yr_contents">
-            <div>
-                <p>필수 정보</p>
+            <div class="sm-title">
+                <br>
+                <p>필수 정보<span class="required-red">*</span></p>
                 <hr>
             </div>
-            <div><!-- ID -->
-                <label>ID</label>
+            <div class="su-field"><!-- ID -->
+                <label>· 아이디</label>
                 <div>
                     <input type="text" id="user_id" name="user_input" class="form-control" maxlength="20" size="24" placeholder="아이디를 입력하세요.(20자 이내)">
                     <button id="idcheck" class="btn btn-outline-secondary">중복확인</button>
@@ -471,58 +472,59 @@
                     <small class="form_err" id="user_id" >필수 입력사항 입니다.</small>
                 </div>
             </div>
-            <div><!-- Name -->
-                <label>Name(or Nickname)</label>
+            <div class="su-field"><!-- Name -->
+                <label>· 이름(혹은 닉네임)</label>
                 <div>
                     <input type="text" id="user_name" name="user_input" class="form-control" maxlength="20" size="24" placeholder="이름 혹은 닉네임(20자 이내)">
                     <small class="form_err" id="user_name" >필수 입력사항 입니다.</small>
                 </div>
             </div>
-            <div><!-- Password -->
-                <label>Password</label>
+            <div class="su-field"><!-- Password -->
+                <label>· 비밀번호</label>
                 <div>
                     <input type="password" id="user_pw" name="user_pw" class="form-control" size="36" placeholder="비밀번호(8~16자 이내의 영문 또는 숫자 조합)">
                     <small class="form_err" id="user_pw" >필수 입력사항 입니다.</small>
                     <small class="form_err" id="user_pwvalid" >8~16자 영문 또는 숫자를 사용하여 조합하세요.(공백 불가)</small>
                 </div>
                 <!-- 비밀번호 확인 영역에 focus out 했을 경우 위의 패스워드와 일치하지 않으면 경고 표시하기-->
-                <label>Confirm Password</label>
+                <label>· 비밀번호 확인</label>
                 <div>
                     <input type="password" id="user_pwcheck" name="user_pwcheck" class="form-control" size="36" placeholder="비밀번호 확인">
                     <small class="form_err" id="user_pwcheck" >필수 입력사항 입니다.</small>
                     <small class="form_err" id="user_pwcheckErr" >비밀번호가 일치하지 않습니다.</small>
                 </div>
-                <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
-                <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+                <div class="alert alert-success yr-sm-font" id="alert-success">비밀번호가 일치합니다.</div>
+                <div class="alert alert-danger yr-sm-font" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
             </div>
-            <div>
+            <div class="sm-title">
+                <br>
                 <p>선택 정보</p>
                 <hr>
             </div>
 
-            <div><!-- Email -->
-                <label>Email</label>
+            <div class="su-field"><!-- Email -->
+                <label>· 이메일</label>
                 <div>
                     <input type="email" id="email" name="email" class="form-control" placeholder="email">
                     <small class="form_err" id="email">이메일 형식이 올바르지 않습니다.</small>
                 </div>
             </div>
-            <div><!-- Tel -->
-                <label>Phone number</label>
+            <div class="su-field"><!-- Tel -->
+                <label>· 휴대폰 번호</label>
                 <div>
                     <input type="tel" id="cp_num" name="cp_num" class="form-control" placeholder="010-1234-5678">
                     <small class="form_err" id="cp_num">전화번호 형식이 올바르지 않습니다.</small>
                 </div>
             </div>
-            <div> <!-- Gender -->
-                <label>성별</label>
+            <div class="su-field"> <!-- Gender -->
+                <label>· 성별</label>
                 <div>
                     <input type="radio" id="female" name="gender" value="1">여성
                     <input type="radio" id="male" name="gender" value="2">남성
                 </div>
             </div>
-            <div><!-- Birth date -->
-                <label>생년월일</label>
+            <div class="su-field"><!-- Birth date -->
+                <label>· 생년월일</label>
                 <div>
                     <select id="b_year" name="b_year" class="form-control b_date float-left">
                         <option value="" selected>- 연도 -</option>
@@ -539,13 +541,20 @@
                     <small class="form_err" id="birthdate">생년월일을 다시 확인해주세요.</small>
                 </div>
             </div>
-            <div><!--회원가입 완료 버튼-->
+            <br>
+            <div class="su-field-btn"><!--회원가입 완료 버튼-->
                 <button id="signUp" class="btn btn-primary btn-lg btn-block">가입하기</button>
             </div>
 
         </div>
 
     </div>
+
+    <div class="container">
+        <br><br>
+        <p class="copyright">Park Yurim 2020</p>
+    </div>
+
 </div>
 
 

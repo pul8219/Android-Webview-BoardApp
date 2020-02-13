@@ -24,7 +24,7 @@
 
         /* (1) CSS 템플릿에 있던 공통 css 요소 */
         body {
-            background-color: #EEEDEE;
+            background-color: #f3f2f3;
         }
 
         body>.grid {
@@ -184,8 +184,9 @@
         <h2 class="ui teal image header">
             게시글 수정
         </h2>
-        <form class="ui large form">
-            <div class="ui stacked segment">
+        <div class="ui large form">
+            <div class="contentBox" style="background-color: white; padding: 1em;
+            border-radius: 0.28571429rem; border: 1px solid rgba(34, 36, 38, .15);">
                 <div class="field">
                     <input type="text" id="b_title" name="title" placeholder="게시글 제목" autocomplete="off" autofocus="autofocus">
                 </div>
@@ -200,13 +201,17 @@
                     </div>
                 </div>
                 <div class="ui fluid large teal submit button" id="update_bbs">수정 완료</div>
+                <br>
+                <button class="btn btn-light btn-lg btn-block yrbutton" onclick="cancelCheck()">수정 취소하고 뒤로가기</button>
             </div>
 
-            <div class="ui error message"></div>
+        </div>
 
-        </form>
+        <div class="container">
+            <br><br>
+            <p class="copyright">Park Yurim 2020</p>
+        </div>
 
-        <button class="ui fluid large teal submit button" onclick="cancelCheck()">수정 취소하고 뒤로가기</button>
     </div>
 </div>
 </body>

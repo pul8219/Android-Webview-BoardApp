@@ -23,7 +23,7 @@
 
         /* (1) CSS 템플릿에 있던 공통 css 요소 */
         body {
-            background-color: #EEEDEE;
+            background-color: #f3f2f3;
         }
 
         body>.grid {
@@ -308,7 +308,7 @@
     		// 댓글 수정시 보이는 요소
     		html += '<div style="display:none;" id="updateContent' + item.REPLY_NO + '">';
     		html += '<textarea id="innerText' + item.REPLY_NO + '" name="innerText" rows="3" cols="24">' + reply_content + '</textarea><br>';
-    		html += '<button id="replyUpdateSubmit' + item.REPLY_NO + '" name="replyUpdateSubmit">수정완료</button>';
+    		html += '<button id="replyUpdateSubmit' + item.REPLY_NO + '" name="replyUpdateSubmit" class="btn btn-secondary btn-sm">수정완료</button>';
     		html += '</div>';
 
     		html += '<div class="rep_regdate">' + item.REGDATE + '</div>';
@@ -404,7 +404,8 @@
         </h2>
 
         <div class="ui large form">
-            <div class="ui stacked segment">
+            <div class="contentBox" style="background-color: white; padding: 1em;
+            border-radius: 0.28571429rem; border: 1px solid rgba(34, 36, 38, .15);">
                 <table class="table">
                     <thead></thead>
                     <tbody id="boardinfo">
@@ -425,12 +426,12 @@
 
                     <br>
                     <br>
-                    <button id="openPopup">공유하기</button>
+                    <button id="openPopup" class="btn btn-outline-primary btn-sm">공유하기</button>
                     <div id="SharePopup" class="popup-layer" style="display:none; margin-top:20%; width:100%;">
                         <div id="SharePopupContents">
                             <div class="header">
                                 <div class="title float-left">공유하기</div>
-                                <div class="btn-close-layer float-right"><button id="closePopup">X</button></div>
+                                <div class="float-right"><button id="closePopup" type="button" class="close" aria-label="Close">X</button></div>
                                 <br><hr>
                             </div>
                             <div class="content input-group mb-3">
@@ -465,7 +466,7 @@
                         <textarea rows="3" cols="24" id="reply_content" name="reply_content" placeholder="댓글을 입력하세요."></textarea>
                     </div>
                     <div>
-                        <div><button id="reply_submit" name="reply_submit">등록</button></div>
+                        <div><button id="reply_submit" name="reply_submit" class="btn btn-secondary btn-sm">등록</button></div>
                         <!-- <input type="button" id="reply_submit" name="reply_submit" value="등록"> -->
                         <!--                        <div class="btn btn-default btn-secondary btn-sm active float-right"><button id="reply_submit">등록</button></div>-->
                     </div>
@@ -474,7 +475,13 @@
 
         </div>
 
+        <div class="container">
+            <br><br>
+            <p class="copyright">Park Yurim 2020</p>
+        </div>
+
     </div>
+
 </div>
 
 </body>

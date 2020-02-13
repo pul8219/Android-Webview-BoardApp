@@ -10,8 +10,11 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import org.json.JSONArray;
 
+import static com.example.yrboardapp.ConstantUrl.URL;
+
 public class JSInterface {
     public static final String PREF_NAME = "shared";
+    public static final String LOGOUT_URL = URL + "www/signIn.html";
 
     private Context mContext;
     private WebView mWebView;
@@ -111,6 +114,42 @@ public class JSInterface {
             }
         });
     } // end of login() method
+
+
+    // 로그아웃
+    @JavascriptInterface
+    public void logout(){
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                // 로그아웃함에 따라 저장소에 저장돼있는 사용자의 아이디, 이름 정보를 null로 초기화
+                mSharedPreferences.edit().putString("id", "").commit();
+                mSharedPreferences.edit().putString("name", "").commit();
+
+                mWebView.loadUrl(LOGOUT_URL);
+
+            }
+        });
+
+    } // end of logout() method
+
+
+    // 로그아웃 체크(로그아웃 이후 혹은 로그인을 안했을 때 게시판 앱 내 url에 접근을 제한하기 위함)
+    @JavascriptInterface
+    public void logout_check(){
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                // 세션에서 사용자의 정보를 받아옴
+                String cur_id = getSessionData("id");
+                String cur_name = getSessionData("name");
+                if(cur_id=="" && cur_name==""){
+                    mWebView.loadUrl(LOGOUT_URL);
+                }
+            }
+        });
+
+    } // end of logout_check() method
 
 
     // 회원 가입
